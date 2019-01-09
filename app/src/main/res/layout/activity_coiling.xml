@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_height="match_parent"
+    android:layout_width="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110px"
+        android:gravity="top"
+        >
+
+        <TextView
+            android:id="@+id/top_user"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".35"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:paddingLeft="2dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/top_db"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".35"
+            android:gravity="center_vertical"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/sign_out"
+            android:layout_width="0dp"
+            android:layout_weight=".30"
+            android:layout_height="match_parent"
+            android:text="@string/signOut" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/wrapping_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/welcome"
+            android:layout_gravity="center"
+            android:textSize="48px" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="50px"
+            android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:paddingTop="15px"
+                    android:layout_height="75px"
+                    android:text="@string/wrap_serial"/>
+                <TextView
+                    android:layout_width="match_parent"
+                    android:paddingTop="15px"
+                    android:layout_height="75px"
+                    android:text="@string/wrap_shelf" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:paddingTop="15px"
+                    android:layout_height="75px"
+                    android:text="@string/wrap_quantity"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="350px"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/wrapping_serial"
+                    android:layout_width="match_parent"
+                    android:paddingTop="10px"
+                    android:layout_height="75px"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"/>
+
+                <EditText
+                    android:id="@+id/wrapping_shelf"
+                    android:layout_width="match_parent"
+                    android:paddingTop="10px"
+                    android:layout_height="75px"
+                    android:inputType="text"
+                    android:imeOptions="actionNext"/>
+
+                <EditText
+                    android:id="@+id/wrapping_quantity"
+                    android:layout_width="match_parent"
+                    android:paddingTop="10px"
+                    android:layout_height="75px"
+                    android:inputType="number"
+                    android:imeOptions="actionSend" />
+            </LinearLayout>
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!--<ToggleButton
+            android:id="@+id/add_subtract"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="match_parent"
+            android:checked="true"
+            android:textOff="@string/subtract"
+            android:textOn="@string/add" />-->
+
+        <Button
+            android:id="@+id/wrapping_upload"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add"/>
+    </LinearLayout>
+
+        <Spinner
+            android:id="@+id/wrapping_select"
+            android:layout_width="198dp"
+            android:layout_height="34dp"
+            android:layout_marginTop="200px"
+            android:prompt="@string/spinner_prompt"
+            android:spinnerMode="dropdown" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="110px"
+        android:layout_marginTop="900px"
+        android:gravity="bottom"
+        >
+
+        <Button
+            android:id="@+id/location_view"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="match_parent"
+            android:text="@string/view_locations"/>
+        <Button
+            android:id="@+id/bottom_view"
+            android:layout_width="0dp"
+            android:layout_weight=".5"
+            android:layout_height="match_parent"
+            android:text="@string/view_schedule" />
+
+    </LinearLayout>
+</RelativeLayout>

@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="15px"
+            android:layout_height="75px"
+            android:text="@string/user"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="15px"
+            android:layout_height="75px"
+            android:text="@string/pass" />
+        <TextView
+            android:layout_width="match_parent"
+            android:paddingTop="15px"
+            android:layout_height="75px"
+            android:text="@string/database"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="400px"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/user_name"
+            android:layout_width="match_parent"
+            android:paddingTop="10px"
+            android:layout_height="75px"
+            android:inputType="text"
+            android:imeOptions="actionNext"/>
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:paddingTop="10px"
+            android:layout_height="75px"
+            android:inputType="text"
+            android:imeOptions="actionSend"/>
+
+        <Spinner
+            android:id="@+id/db_select"
+            android:layout_width="match_parent"
+            android:layout_height="75px"
+            android:spinnerMode="dropdown"
+            android:entries="@array/spinner_items"/>
+    </LinearLayout>
+
+    </LinearLayout>
+    <Button
+        android:id="@+id/login"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/login"/>
+
+</LinearLayout>

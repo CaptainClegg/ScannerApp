@@ -1,0 +1,42 @@
+<resources>
+    <string name="app_name">ScannerApp</string>
+    <string name="welcome">Add Items</string>
+    <string name="manual">Manual Input</string>
+    <string name="submit">Submit</string>
+    <string name="auto">Automatic</string>
+    <string name="signOut">Sign Out</string>
+    <string name="user">User Name:</string>
+    <string name="pass">Password:</string>
+    <string name="database">Activity:</string>
+    <string name="login">Sign In</string>
+    <string name="spinner_prompt">Select an Activity</string>
+    <string name="download">Download Database</string>
+    <string name="upload">Upload Changes</string>
+    <string name="view">View Inventory</string>
+    <string name="add">Add Units</string>
+    <string name="subtract">Remove Units</string>
+    <string name="view_schedule">View Schedule</string>
+    <string name="wrap_quantity"># of Units:</string>
+    <string name="wrap_shelf">Shelf Number:</string>
+    <string name="wrap_serial">Unit Serial #:</string>
+    <string name="view_locations">View Locations</string>
+    <string name="winding_spinner_prompt">Choose Activity</string>
+    <string name="location_column_2">quantity</string>
+    <string name="location_column_1">location</string>
+
+    <string-array name="spinner_items">
+        <item>Inventory</item>
+        <item>Quality</item>
+        <item>Wrapping</item>
+        <item>Line</item>
+    </string-array>
+    <string-array name="coiling_activities">
+        <item>Add Units</item>
+        <item>Remove Units</item>
+        <item>Adjust Units</item>
+        <item>Change Activity</item>
+    </string-array>
+    <string name="title_activity_location">Location Activity</string>
+    <string name="location_title">Location</string>
+
+</resources>
