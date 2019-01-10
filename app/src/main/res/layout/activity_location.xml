@@ -11,14 +11,42 @@
         android:text="@string/location_title"
         android:textSize="25sp"
         />
+
     <EditText
         android:id="@+id/wo_input"
-        android:paddingTop="10px"
-        android:layout_width="wrap_content"
+        android:paddingTop="7dp"
+        android:layout_width="170dp"
         android:layout_height="wrap_content"
         android:inputType="text"
         android:imeOptions="actionSend"
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:hint="@string/location_hint"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:text="@string/location_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:text="@string/quantity_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            />
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:background="#000"/>
+
     <ListView
         android:id="@+id/location_list"
         android:layout_width="match_parent"

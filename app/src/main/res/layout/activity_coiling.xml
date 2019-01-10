@@ -113,14 +113,26 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <!--<ToggleButton
-            android:id="@+id/add_subtract"
-            android:layout_width="0dp"
-            android:layout_weight=".5"
-            android:layout_height="match_parent"
-            android:checked="true"
-            android:textOff="@string/subtract"
-            android:textOn="@string/add" />-->
+        <RadioGroup
+            android:id="@+id/radio_group"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty_question"/>
+            <RadioButton
+                android:id="@+id/radio_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/empty"/>
+            <RadioButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/partial"/>
+
+        </RadioGroup>
 
         <Button
             android:id="@+id/wrapping_upload"

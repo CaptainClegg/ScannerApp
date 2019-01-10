@@ -1,8 +1,10 @@
 package com.example.misdclegg.scannerapp;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
@@ -23,6 +25,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,7 +49,8 @@ public class CoilingActivity extends AppCompatActivity {
     private Button mUpload;
     private Button mViewLocations;
     private Button mView;
-    //private ToggleButton mAddSub;
+    private RadioGroup mRadioGroup;
+
     private Spinner mWrappingSpinner;
 
     private TextView mTopUser;
@@ -61,12 +65,13 @@ public class CoilingActivity extends AppCompatActivity {
     private AlertDialog alertDialog;
 
     private String ip = "10.100.18.125";
+    //private String ip = "dyr05";
     private String required = "net.sourceforge.jtds.jdbc.Driver";
     private String mRealDataBase = "testDB";
+    //private String mRealDataBase = "INV";
     private String un;
     private String password;
 
-    private String oldProduct;
     private String mMesage;
     private int mSpinnerIndex;
 
@@ -102,75 +107,7 @@ public class CoilingActivity extends AppCompatActivity {
         return conn;
     }
 
-    public void insertPallet(String newSerial, String newShelf, String newQuantity){
-        String query = " insert into WrappingTable (serial, shelf, quantity)" + "values (?, ?, ?)";
 
-        try {
-            Connection conn = CONN();
-            PreparedStatement preparedStmt = conn.prepareStatement(query);
-            preparedStmt.setString (1, newSerial);
-            preparedStmt.setString (2, newShelf);
-            preparedStmt.setString (3, newQuantity);
-            preparedStmt.execute();
-            conn.close();
-            resetFields();
-
-        }
-        catch (Exception e){
-            System.out.println("error after connection and before close");
-        }
-    }
-
-    public void removeUnits(String newSerial, String newShelf, String removeQuantity){
-        String query1 = "select quantity from WrappingTable where serial = ? and shelf = ?";
-
-        int oldQuantity = 0;
-        int newQuantity;
-        try {
-            Connection conn1 = CONN();
-            PreparedStatement ps = conn1.prepareStatement(query1);
-            ps.setString (1, newSerial);
-            ps.setString (2, newShelf);
-            ResultSet resultSet = ps.executeQuery();
-            while (resultSet.next()) {
-                oldQuantity = resultSet.getInt("quantity");
-            }
-            conn1.close();
-            newQuantity = oldQuantity - Integer.parseInt(removeQuantity);
-
-            if(newQuantity > 0){
-                String query = " update WrappingTable" +
-                        " set quantity = ?" +
-                        " where serial = ? and shelf = ?";
-                Connection conn = CONN();
-                PreparedStatement preparedStmt = conn.prepareStatement(query);
-                preparedStmt.setString (1, String.valueOf(newQuantity));
-                preparedStmt.setString (2, newSerial);
-                preparedStmt.setString (3, newShelf);
-                preparedStmt.execute();
-                conn.close();
-            }
-            else if(newQuantity == 0){
-                String query = "delete from WrappingTable where serial = ? and shelf = ?";
-                Connection conn2 = CONN();
-                PreparedStatement preparedStmt = conn2.prepareStatement(query);
-                preparedStmt.setString (1, newSerial);
-                preparedStmt.setString (2, newShelf);
-                preparedStmt.execute();
-                conn2.close();
-            }
-            else {
-                mMesage = "You were not able to remove the items because you entered more items than there are on record for this pallet!";
-                alertUser(mMesage);
-                return;
-            }
-            resetFields();
-
-        }
-        catch (Exception e){
-            System.out.println(e);
-        }
-    }
 
 
     @Override
@@ -187,7 +124,7 @@ public class CoilingActivity extends AppCompatActivity {
         mUpload = (Button) findViewById(R.id.wrapping_upload);
         mViewLocations = (Button) findViewById(R.id.location_view);
         mView = (Button) findViewById(R.id.bottom_view);
-        //mAddSub = (ToggleButton) findViewById(R.id.add_subtract);
+        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
 
         mTopUser = (TextView) findViewById(R.id.top_user);
         mTopDb = (TextView) findViewById(R.id.top_db);
@@ -195,7 +132,6 @@ public class CoilingActivity extends AppCompatActivity {
 
         mDatabaseHelper = new DatabaseHelper(this);
         mWrappingSpinner = (Spinner) findViewById(R.id.wrapping_select);
-        mSpinnerIndex = 0;
 
 
         //Used to keep the spinner title in view but not in selection
@@ -211,9 +147,10 @@ public class CoilingActivity extends AppCompatActivity {
                 return(listsize); // Truncate the list
             }
         };
+
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mWrappingSpinner.setAdapter(dataAdapter);
-        mWrappingSpinner.setSelection(listsize);
+        mWrappingSpinner.setSelection(0);
         //end of spinner action
 
         try {
@@ -280,7 +217,6 @@ public class CoilingActivity extends AppCompatActivity {
         mProductInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                oldProduct = s.toString();
             }
 
             @Override
@@ -341,11 +277,15 @@ public class CoilingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mProductInput.getText().toString().length() > 0 && mShelfInput.getText().toString().length() > 0
-                        && mQuantityInput.getText().toString().length() > 0 && mQuantityInput.getText().toString().length() < 6)
+                        && mQuantityInput.getText().toString().length() > 0 && mQuantityInput.getText().toString().length() < 6
+                        && mRadioGroup.getCheckedRadioButtonId() != -1)
                     submitClear();
                 else {
-                    mMesage = "Check to make sure your values are correct, and try again";
+                    mMesage = "Check to make sure you have entered all the values, and try again";
                     alertUser(mMesage);
+                    View radioView = mRadioGroup.findViewById(mRadioGroup.getCheckedRadioButtonId());
+                    int radioIndex = mRadioGroup.indexOfChild(radioView);
+                    System.out.println(radioIndex);
                 }
             }
         });
@@ -371,6 +311,25 @@ public class CoilingActivity extends AppCompatActivity {
         });
 
 
+    }
+
+    @Override
+    protected void onPause(){
+        super.onPause();
+        System.out.println("onpause was called");
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putInt("SPINNERINDEX", mSpinnerIndex);
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        System.out.println("onRestoreIn stanceCalled");
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        mSpinnerIndex = sharedPref.getInt("SPINNERINDEX", 0);
+        mWrappingSpinner.setSelection(mSpinnerIndex);
     }
 
     public void submitClear() {
@@ -406,5 +365,114 @@ public class CoilingActivity extends AppCompatActivity {
                 });
         alertDialog.show();
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
+    }
+
+    public void insertPallet(String newSerial, String newShelf, String addQuantity){
+
+
+        try {
+            int oldQuantity = 0;
+            int newQuantity;
+
+            Connection conn1 = CONN();
+            String query1 = "select quantity from WrappingTable where serial = ? and shelf = ?";
+            PreparedStatement ps = conn1.prepareStatement(query1);
+            ps.setString(1, newSerial);
+            ps.setString(2, newShelf);
+            ResultSet resultSet = ps.executeQuery();
+            if (resultSet.next()) {
+                oldQuantity = resultSet.getInt("quantity");
+                System.out.print(oldQuantity);
+                conn1.close();
+                newQuantity = oldQuantity + Integer.parseInt(addQuantity);
+
+                if(newQuantity > 0){
+                    String query = " update WrappingTable" +
+                            " set quantity = ?" +
+                            " where serial = ? and shelf = ?";
+                    Connection conn = CONN();
+                    PreparedStatement preparedStmt = conn.prepareStatement(query);
+                    preparedStmt.setString (1, String.valueOf(newQuantity));
+                    preparedStmt.setString (2, newSerial);
+                    preparedStmt.setString (3, newShelf);
+                    preparedStmt.execute();
+                    conn.close();
+                }
+                else {
+                    mMesage = "You were not able to add the items because you entered a negative number!";
+                    alertUser(mMesage);
+                    return;
+                }
+            }
+            else {
+                Connection conn = CONN();
+                String query = " insert into WrappingTable (serial, shelf, quantity)" + "values (?, ?, ?)";
+                PreparedStatement preparedStmt = conn.prepareStatement(query);
+                preparedStmt.setString (1, newSerial);
+                preparedStmt.setString (2, newShelf);
+                preparedStmt.setString (3, addQuantity);
+                preparedStmt.execute();
+                conn.close();
+            }
+        }
+        catch (Exception e){
+            mMesage = "You were not able to add the items because the connection failed!";
+            alertUser(mMesage);
+            return;
+        }
+        resetFields();
+
+    }
+
+    public void removeUnits(String newSerial, String newShelf, String removeQuantity){
+        String query1 = "select quantity from WrappingTable where serial = ? and shelf = ?";
+
+        int oldQuantity = 0;
+        int newQuantity;
+        try {
+            Connection conn1 = CONN();
+            PreparedStatement ps = conn1.prepareStatement(query1);
+            ps.setString (1, newSerial);
+            ps.setString (2, newShelf);
+            ResultSet resultSet = ps.executeQuery();
+            while (resultSet.next()) {
+                oldQuantity = resultSet.getInt("quantity");
+            }
+            conn1.close();
+            newQuantity = oldQuantity - Integer.parseInt(removeQuantity);
+
+            if(newQuantity > 0){
+                String query = " update WrappingTable" +
+                        " set quantity = ?" +
+                        " where serial = ? and shelf = ?";
+                Connection conn = CONN();
+                PreparedStatement preparedStmt = conn.prepareStatement(query);
+                preparedStmt.setString (1, String.valueOf(newQuantity));
+                preparedStmt.setString (2, newSerial);
+                preparedStmt.setString (3, newShelf);
+                preparedStmt.execute();
+                conn.close();
+            }
+            else if(newQuantity == 0){
+                String query = "delete from WrappingTable where serial = ? and shelf = ?";
+                Connection conn2 = CONN();
+                PreparedStatement preparedStmt = conn2.prepareStatement(query);
+                preparedStmt.setString (1, newSerial);
+                preparedStmt.setString (2, newShelf);
+                preparedStmt.execute();
+                conn2.close();
+            }
+            else {
+                mMesage = "You were not able to remove the items because you entered more items than there are on record for this pallet!";
+                alertUser(mMesage);
+                return;
+            }
+            resetFields();
+
+        }
+        catch (Exception e){
+            mMesage = "the database connection did not operate correctly";
+            alertUser(mMesage);
+        }
     }
 }

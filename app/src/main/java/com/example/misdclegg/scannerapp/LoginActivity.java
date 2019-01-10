@@ -1,7 +1,9 @@
 package com.example.misdclegg.scannerapp;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
 import android.media.SoundPool;
@@ -65,6 +67,11 @@ public class LoginActivity extends AppCompatActivity {
         mPassView = (EditText) findViewById(R.id.password);
         mDbView = (Spinner) findViewById(R.id.db_select);
         mLogButton = (Button) findViewById(R.id.login);
+
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("WONUMBER");
+        editor.apply();
 
         try {
             Bundle myBundle = getIntent().getExtras();
@@ -130,6 +137,8 @@ public class LoginActivity extends AppCompatActivity {
         Connection conn = null;
         String ConnURL = null;
 
+        //String ip = "dyr05";
+        //String db = "INV";
         String db = "testDB";
         String ip = "10.100.18.125";
         String required = "net.sourceforge.jtds.jdbc.Driver";

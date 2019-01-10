@@ -1,7 +1,11 @@
 package com.example.misdclegg.scannerapp;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +16,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,10 +41,14 @@ public class LocationActivity extends AppCompatActivity {
     private ListView mListView;
 
     private String ip = "10.100.18.125";
+    //private String ip = "dyr05";
     private String required = "net.sourceforge.jtds.jdbc.Driver";
     private String mRealDataBase = "testDB";
+    //private String mRealDataBase = "INV";
     private String un;
     private String password;
+
+
 
     @SuppressLint("NewApi")
     public Connection CONN() {
@@ -69,7 +78,7 @@ public class LocationActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_location);
-        System.out.println("logcat works");
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         mListView = (ListView) findViewById(R.id.location_list);
 
@@ -87,13 +96,32 @@ public class LocationActivity extends AppCompatActivity {
             }
         });
 
+        mWorkOrderInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                if (before + 1 < count) {
+                    searchLocation(mWorkOrderInput.getText().toString());
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+        });
+
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TableLayout clickedRow = (TableLayout) view;
                 TableRow rowTable = (TableRow) clickedRow.getChildAt(0);
                 TextView location = (TextView) rowTable.getChildAt(0);
-                TextView quantity = (TextView) rowTable.getChildAt(1);
+                TextView quantity = (TextView) rowTable.getChildAt(2);
                 System.out.println(location.getText().toString());
                 System.out.println(quantity.getText().toString());
                 returnToActivity(location.getText().toString(), quantity.getText().toString());
@@ -122,6 +150,33 @@ public class LocationActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onPause(){
+        super.onPause();
+        System.out.println("onpause was called");
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("WONUMBER", mWorkOrderInput.getText().toString());
+        editor.apply();
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        System.out.println("onRestoreIn stanceCalled");
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        String serialString = sharedPref.getString("WONUMBER", "");
+        mWorkOrderInput.setText(serialString);
+        searchLocation(serialString);
+        mWorkOrderInput.setEnabled(false);
+        mWorkOrderInput.setEnabled(true);
+    }
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+
+    }
+
     public void searchLocation(String woNumber){
         String query = "Select * from WrappingTable WHERE serial = ?";
         try{
@@ -142,7 +197,7 @@ public class LocationActivity extends AppCompatActivity {
             mListView.setAdapter(adapter);
 
             conn.close();
-            System.out.print("succuessss");
+            System.out.print("success");
         }
         catch (Exception e){
             System.out.println(e);
@@ -160,6 +215,17 @@ public class LocationActivity extends AppCompatActivity {
         myBundle.putString("QUANTITY", quantity);
         intent.putExtras(myBundle);
         startActivity(intent);
+    }
+
+    public static void hideKeyboard(Activity activity) {
+        InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+        //Find the currently focused view, so we can grab the correct window token from it.
+        View view = activity.getCurrentFocus();
+        //If no view currently has focus, create a new one, just so we can grab a window token from it
+        if (view == null) {
+            view = new View(activity);
+        }
+        imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
     }
 
 }

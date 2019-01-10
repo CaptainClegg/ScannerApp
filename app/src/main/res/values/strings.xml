@@ -37,6 +37,11 @@
         <item>Change Activity</item>
     </string-array>
     <string name="title_activity_location">Location Activity</string>
-    <string name="location_title">Location</string>
+    <string name="location_title">Locations</string>
+    <string name="location_hint">Work Order Number</string>
+    <string name="quantity_title">quantity</string>
+    <string name="empty">Empty</string>
+    <string name="partial">Partial/Full</string>
+    <string name="empty_question">Bin Status</string>
 
 </resources>
