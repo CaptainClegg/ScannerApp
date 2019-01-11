@@ -137,17 +137,11 @@ public class LoginActivity extends AppCompatActivity {
         Connection conn = null;
         String ConnURL = null;
 
-        //String ip = "dyr05";
-        //String db = "INV";
-        String db = "testDB";
-        String ip = "10.100.18.125";
-        String required = "net.sourceforge.jtds.jdbc.Driver";
-
         try {
 
-            Class.forName(required);
-            ConnURL = "jdbc:jtds:sqlserver://" + ip + ":1433;"
-                    + "databaseName=" + db + ";user=" + un + ";password="
+            Class.forName(getString(R.string.required_jdbc));
+            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
+                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
                     + password + ";";
             conn = DriverManager.getConnection(ConnURL);
 

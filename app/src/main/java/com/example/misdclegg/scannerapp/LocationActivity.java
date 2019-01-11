@@ -40,11 +40,6 @@ public class LocationActivity extends AppCompatActivity {
 
     private ListView mListView;
 
-    private String ip = "10.100.18.125";
-    //private String ip = "dyr05";
-    private String required = "net.sourceforge.jtds.jdbc.Driver";
-    private String mRealDataBase = "testDB";
-    //private String mRealDataBase = "INV";
     private String un;
     private String password;
 
@@ -59,9 +54,9 @@ public class LocationActivity extends AppCompatActivity {
         String ConnURL = null;
         try {
 
-            Class.forName(required);
-            ConnURL = "jdbc:jtds:sqlserver://" + ip + ":1433;"
-                    + "databaseName=" + mRealDataBase + ";user=" + un + ";password="
+            Class.forName(getString(R.string.required_jdbc));
+            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
+                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
                     + password + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
@@ -163,13 +158,21 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        System.out.println("onRestoreIn stanceCalled");
-        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
-        String serialString = sharedPref.getString("WONUMBER", "");
-        mWorkOrderInput.setText(serialString);
-        searchLocation(serialString);
-        mWorkOrderInput.setEnabled(false);
-        mWorkOrderInput.setEnabled(true);
+        System.out.println("onResume Called");
+        try{
+            Bundle myBundle = getIntent().getExtras();
+            mWorkOrderInput.setText(myBundle.getString("MISSING", ""));
+            if (myBundle.getString("MISSING", "") == "")
+                throw new Exception("the db did not connect");
+            System.out.println("the string was passed." + myBundle.getString("MISSING", "") + ".");
+            searchLocation(mWorkOrderInput.getText().toString());
+        }
+        catch (Exception e) {
+            SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+            String serialString = sharedPref.getString("WONUMBER", "");
+            mWorkOrderInput.setText(serialString);
+            searchLocation(serialString);
+        }
     }
     @Override
     protected void onDestroy(){
@@ -197,7 +200,7 @@ public class LocationActivity extends AppCompatActivity {
             mListView.setAdapter(adapter);
 
             conn.close();
-            System.out.print("success");
+            System.out.println("success.........");
         }
         catch (Exception e){
             System.out.println(e);

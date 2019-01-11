@@ -39,6 +39,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_marginTop="-100dp"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -48,7 +49,8 @@
             android:layout_height="wrap_content"
             android:text="@string/welcome"
             android:layout_gravity="center"
-            android:textSize="48px" />
+            android:textSize="24sp"
+            android:textColor="#000"/>
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -113,8 +115,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
-        <RadioGroup
-            android:id="@+id/radio_group"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -122,32 +123,33 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/empty_question"/>
+            <RadioGroup
+                android:id="@+id/radio_group"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
             <RadioButton
                 android:id="@+id/radio_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/empty"/>
             <RadioButton
+                android:id="@+id/radio_two"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/partial"/>
+            </RadioGroup>
 
-        </RadioGroup>
+        </LinearLayout>
 
         <Button
             android:id="@+id/wrapping_upload"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
             android:text="@string/add"/>
     </LinearLayout>
-
-        <Spinner
-            android:id="@+id/wrapping_select"
-            android:layout_width="198dp"
-            android:layout_height="34dp"
-            android:layout_marginTop="200px"
-            android:prompt="@string/spinner_prompt"
-            android:spinnerMode="dropdown" />
     </LinearLayout>
 
     <LinearLayout

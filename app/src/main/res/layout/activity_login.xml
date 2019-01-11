@@ -29,7 +29,7 @@
             android:layout_width="match_parent"
             android:paddingTop="15px"
             android:layout_height="75px"
-            android:text="@string/database"/>
+            android:text="@string/choose_database"/>
 
     </LinearLayout>
 

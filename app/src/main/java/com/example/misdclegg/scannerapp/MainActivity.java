@@ -49,9 +49,6 @@ public class MainActivity extends AppCompatActivity {
 
     DatabaseHelper mDatabaseHelper;
 
-    private String ip = "10.100.18.125";
-    private String required = "net.sourceforge.jtds.jdbc.Driver";
-    private String mRealDataBase = "testDB";
     private String db;
     private String un;
     private String password;
@@ -71,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
         String ConnURL = null;
         try {
 
-            Class.forName(required);
-            ConnURL = "jdbc:jtds:sqlserver://" + ip + ":1433;"
-                    + "databaseName=" + mRealDataBase + ";user=" + un + ";password="
+            Class.forName(getString(R.string.required_jdbc));
+            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
+                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
                     + password + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
