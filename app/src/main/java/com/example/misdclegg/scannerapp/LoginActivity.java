@@ -71,6 +71,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove("WONUMBER");
+        editor.remove("PRODRUN");
         editor.apply();
 
         try {
