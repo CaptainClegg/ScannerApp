@@ -6,11 +6,14 @@ public class ScheduleClass {
     private Float quantity;
     private int inStock;
 
-    public ScheduleClass(String sequence, String workOrder, Float quantity, int inStock){
+    private String completeFlag;
+
+    public ScheduleClass(String sequence, String workOrder, Float quantity, int inStock, String completeFlag){
         this.sequence = sequence;
         this.workOrder = workOrder;
         this.quantity = quantity;
         this.inStock = inStock;
+        this.completeFlag = completeFlag;
     }
 
     public String getSequence(){
@@ -27,5 +30,9 @@ public class ScheduleClass {
 
     public int getInStock(){
         return inStock;
+    }
+
+    public String getCompleteFlag(){
+        return completeFlag;
     }
 }

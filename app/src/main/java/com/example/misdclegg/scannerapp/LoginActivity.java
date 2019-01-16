@@ -1,5 +1,6 @@
 package com.example.misdclegg.scannerapp;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -69,9 +70,13 @@ public class LoginActivity extends AppCompatActivity {
         mLogButton = (Button) findViewById(R.id.login);
 
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = sharedPref.edit();
+        final SharedPreferences.Editor editor = sharedPref.edit();
         editor.remove("WONUMBER");
         editor.remove("PRODRUN");
+        editor.remove("USERNAME");
+        editor.remove("PASSWORD");
+        editor.remove("SHIFT_RADIO");
+        editor.remove("PADPOLE_RADIO");
         editor.apply();
 
         try {
@@ -112,6 +117,7 @@ public class LoginActivity extends AppCompatActivity {
                 Bundle myBundle = new Bundle();
                 myBundle.putString("USERNAME", mUserName);
                 myBundle.putString("PASSWORD", mPassword);
+
 
                 if (mDbView.getSelectedItemPosition() == 0) {
                     Intent intent = new Intent(LoginActivity.this, MainActivity.class);

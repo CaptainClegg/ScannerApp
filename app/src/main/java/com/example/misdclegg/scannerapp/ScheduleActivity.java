@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.media.AudioManager;
@@ -19,11 +20,15 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 
 import java.sql.Connection;
@@ -34,7 +39,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.concurrent.CompletableFuture;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends AppCompatActivity{
 
     private ListView mListView;
 
@@ -50,6 +55,7 @@ public class ScheduleActivity extends AppCompatActivity {
 
     private AlertDialog alertDialog;
     private ProgressBar mProgressBar;
+    private Context mContext;
 
     private SoundPool mSoundPool;
     private int mSoundId;
@@ -76,7 +82,7 @@ public class ScheduleActivity extends AppCompatActivity {
         mPadRadio = (RadioButton) findViewById(R.id.radio_pad_pad);
 
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-        mProgressBar.setVisibility(View.GONE);
+        //mProgressBar.setVisibility(View.GONE);
 
         mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
         mSoundId = mSoundPool.load(this, R.raw.error, 1);
@@ -85,6 +91,7 @@ public class ScheduleActivity extends AppCompatActivity {
         //mprogressBar = (ProgressBar) findViewById(R.id.progress_loader);
 
         //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
+        //mProgressBar.setVisibility(View.VISIBLE);
 
 
         try {
@@ -114,8 +121,8 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (mProdRunInput.getText().toString().length() > 0
-                        || mShiftRadio.getCheckedRadioButtonId() != -1
-                        || mPadPoleRadio.getCheckedRadioButtonId() != -1)
+                        && mShiftRadio.getCheckedRadioButtonId() != -1
+                        && mPadPoleRadio.getCheckedRadioButtonId() != -1)
                     checkInput();
             }
         });
@@ -124,9 +131,18 @@ public class ScheduleActivity extends AppCompatActivity {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (mProdRunInput.getText().toString().length() > 0
-                        || mShiftRadio.getCheckedRadioButtonId() != -1
-                        || mPadPoleRadio.getCheckedRadioButtonId() != -1)
+                        && mShiftRadio.getCheckedRadioButtonId() != -1
+                        && mPadPoleRadio.getCheckedRadioButtonId() != -1)
                     checkInput();
+            }
+        });
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                LinearLayout clickedRow = (LinearLayout) view;
+                TextView woNumber = (TextView) clickedRow.getChildAt(2);
+                System.out.println(woNumber.getText().toString());
+                returnToActivity(woNumber.getText().toString());
             }
         });
     }
@@ -138,6 +154,8 @@ public class ScheduleActivity extends AppCompatActivity {
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("PRODRUN", mProdRunInput.getText().toString());
+        editor.putInt("SHIFT_RADIO", mShiftRadio.getCheckedRadioButtonId());
+        editor.putInt("PADPOLE_RADIO", mPadPoleRadio.getCheckedRadioButtonId());
         editor.apply();
     }
 
@@ -147,9 +165,11 @@ public class ScheduleActivity extends AppCompatActivity {
         System.out.println("onResume Called");
         try{
             SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
-            String serialString = sharedPref.getString("PRODRUN", "");
+            mProdRunInput.setText(sharedPref.getString("PRODRUN", ""));
             if (sharedPref.getString("PRODRUN", "") == "")
                 throw new Exception("no string to recover");
+            mShiftRadio.check(sharedPref.getInt("SHIFT_RADIO", -1));
+            mPadPoleRadio.check(sharedPref.getInt("PADPOLE_RADIO", -1));
             //checkInput();
         }
         catch (Exception e) {
@@ -209,18 +229,6 @@ public class ScheduleActivity extends AppCompatActivity {
 
     }
 
-    Thread t = new Thread(new Runnable() {
-        public void run() {
-            /*
-             * Do something
-             */
-        }
-    });
-
-
-
-
-
     public void searchSchedule(String prodRun, String shift){
         String query = "SELECT *" +
                 "FROM [schedule]" +
@@ -236,6 +244,18 @@ public class ScheduleActivity extends AppCompatActivity {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()){
+
+                String s, t;
+                s = rs.getString("Flag_SchedDONE");
+                t = rs.getString("Flag_CoilsDONE");
+                if (s != null) {
+                    System.out.println(rs.getString("Flag_SchedDONE"));
+                    s = (s.trim()).toUpperCase();
+                    if(s.equals("Y")) {
+                        continue;
+                    }
+                }
+
                 int inStock = 0;
                 try {
                     String query1 = "SELECT *" +
@@ -252,7 +272,7 @@ public class ScheduleActivity extends AppCompatActivity {
                     conn1.close();
                 }
                 catch (Exception e){                }
-                ScheduleClass newRecord = new ScheduleClass(rs.getString("SEQ"), rs.getString("COILWO"), rs.getFloat("QTY"), inStock);
+                ScheduleClass newRecord = new ScheduleClass(rs.getString("SEQ"), rs.getString("COILWO"), rs.getFloat("QTY"), inStock, t);
                 arrayOfSchedules.add(newRecord);
                 System.out.println("retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
             }
@@ -280,5 +300,15 @@ public class ScheduleActivity extends AppCompatActivity {
                 });
         alertDialog.show();
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
+    }
+
+    private void returnToActivity(String woNumber){
+        Intent intent = new Intent(ScheduleActivity.this, LocationActivity.class);
+        Bundle myBundle = new Bundle();
+        myBundle.putString("USERNAME", un);
+        myBundle.putString("PASSWORD", password);
+        myBundle.putString("MISSING", woNumber);
+        intent.putExtras(myBundle);
+        startActivity(intent);
     }
 }

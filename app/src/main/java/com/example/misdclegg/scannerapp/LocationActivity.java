@@ -163,7 +163,7 @@ public class LocationActivity extends AppCompatActivity {
             Bundle myBundle = getIntent().getExtras();
             mWorkOrderInput.setText(myBundle.getString("MISSING", ""));
             if (myBundle.getString("MISSING", "") == "")
-                throw new Exception("the db did not connect");
+                throw new Exception("the process was not called automatically");
             System.out.println("the string was passed." + myBundle.getString("MISSING", "") + ".");
             searchLocation(mWorkOrderInput.getText().toString());
         }

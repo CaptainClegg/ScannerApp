@@ -1,6 +1,7 @@
 package com.example.misdclegg.scannerapp;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,11 @@ public class ScheduleAdapter extends ArrayAdapter<ScheduleClass> {
         }
 
         ScheduleClass wcRecord = getItem(position);
+
+        if(wcRecord.getCompleteFlag() != null)
+            convertView.setBackgroundColor(Color.WHITE);
+        else
+            convertView.setBackgroundColor(0x80E0AF1F);
 
         TextView tvOne = (TextView) convertView.findViewById(R.id.sequence_column);
         TextView tvTwo = (TextView) convertView.findViewById(R.id.work_order_column);

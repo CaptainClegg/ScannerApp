@@ -138,6 +138,7 @@ public class CoilingActivity extends AppCompatActivity {
                 throw new Exception("the db did not connect");
         }
         catch (Exception e){
+            System.out.println(e);
             un = "You are not connected to a database";
             mTopDb.setVisibility(View.GONE);
             mTopUser.setTextColor(Color.RED);
@@ -280,7 +281,7 @@ public class CoilingActivity extends AppCompatActivity {
 
     public void submitClear() {
             updateBin(mProductInput.getText().toString(), mShelfInput.getText().toString(), mQuantityInput.getText().toString());
-            //todo modify units method
+            //updateFlags(mProductInput.getText().toString());
     }
 
     private void resetFields() {
@@ -370,6 +371,82 @@ public class CoilingActivity extends AppCompatActivity {
         }
         resetFields();
     }
+
+    /*public void updateFlags(String woNumber){
+        //while (rs.next()){
+            int inStock = 0;
+            int orderQuantity = 0;
+            String placedFlag = "";
+            String removedFlag = "";
+
+            try {
+                System.out.println("start try of set flags");
+
+                String query1 = "SELECT *" +
+                        "FROM [WrappingTable]" +
+                        "WHERE [serial] = ?";
+                Connection conn1 = CONN();
+                PreparedStatement ps1 = conn1.prepareStatement(query1);
+                ps1.setString(1, woNumber);
+                ResultSet rs1 = ps1.executeQuery();
+
+                while (rs1.next()) {
+                    inStock = inStock + rs1.getInt("quantity");
+                }
+                System.out.println("flags end of first query");
+
+                conn1.close();
+                String query = "SELECT *" +
+                        "FROM [schedule]" +
+                        "WHERE [COILWO] = ?";
+                Connection conn = CONN();
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setString(1, woNumber);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()){
+                    placedFlag = rs.getString("Flag_CoilsDONE");
+                    removedFlag = rs.getString("Flag_SchedDONE");
+                    System.out.println("...." + placedFlag + removedFlag + "....");
+
+                    orderQuantity = (int)rs.getFloat("QTY");
+                    conn.close();
+                }
+                System.out.println("flags end of second query");
+
+                if(placedFlag != "Y" && removedFlag != "Y" && orderQuantity == inStock){
+                    String query6 = "UPDATE [schedule] SET [Flag_CoilsDONE] = 'Y' WHERE [COILWO] = ?";
+                    Connection conn6 = CONN();
+                    System.out.println("flags end here1");
+                    PreparedStatement ps6 = conn6.prepareStatement(query6);
+                    System.out.println("flags end of here2");
+                    woNumber = "6835855";
+                    ps6.setString(1, woNumber);
+                    System.out.println("flags end of here3");
+                    ps6.execute();
+                    System.out.println("flags end of here4");
+                    conn6.close();
+                    System.out.println("flags end of first update");
+
+                }
+                else if(placedFlag == "Y" && removedFlag != "Y" && inStock == 0){
+                    String query2 = "UPDATE [testDB].[dbo].[schedule]" +
+                            "SET [Flag_SchedDONE] = 'Y'" +
+                            "WHERE [COILWO] = ?";
+                    Connection conn2 = CONN();
+                    PreparedStatement ps2 = conn2.prepareStatement(query2);
+                    ps2.setString(1, woNumber);
+                    ps2.executeUpdate();
+                    conn2.close();
+                    System.out.println("flags end of second update");
+                }
+                else
+                    System.out.println("no flags were changed");
+            }
+            catch (Exception e){
+                System.out.println(e);
+                System.out.println("oh no");
+            }
+    }*/
 
     public void checkForEmptyShelf(String shelf){
         try {

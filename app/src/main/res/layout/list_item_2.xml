@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="35dp"
+    android:orientation="horizontal"
     >
-    <TableRow
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/sequence_column"
             android:layout_width="0dp"
@@ -55,5 +54,5 @@
             android:layout_weight=".20"
             android:layout_column="4"
             android:textAppearance="?android:attr/textAppearanceLarge"/>
-    </TableRow>
-</TableLayout>
+
+</LinearLayout>
