@@ -177,7 +177,21 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onDestroy(){
         super.onDestroy();
-
+    }
+    @Override
+    public void onBackPressed(){
+        Bundle myBundle = getIntent().getExtras();
+        if (myBundle.getString("ACTIVITY", "") == "")
+            finish();
+        else {
+            Intent intent = new Intent(LocationActivity.this, CoilingActivity.class);
+            Bundle myBundle2 = new Bundle();
+            myBundle2.putString("USERNAME", un);
+            myBundle2.putString("PASSWORD", password);
+            myBundle2.putString("SERIAL", mWorkOrderInput.getText().toString());
+            intent.putExtras(myBundle2);
+            startActivity(intent);
+        }
     }
 
     public void searchLocation(String woNumber){

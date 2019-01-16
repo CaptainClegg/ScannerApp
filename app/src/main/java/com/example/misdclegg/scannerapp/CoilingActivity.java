@@ -281,7 +281,7 @@ public class CoilingActivity extends AppCompatActivity {
 
     public void submitClear() {
             updateBin(mProductInput.getText().toString(), mShelfInput.getText().toString(), mQuantityInput.getText().toString());
-            //updateFlags(mProductInput.getText().toString());
+            updateFlags(mProductInput.getText().toString());
     }
 
     private void resetFields() {
@@ -351,7 +351,7 @@ public class CoilingActivity extends AppCompatActivity {
                 }
             }
             else if (Integer.parseInt(updateQuantity) == 0){
-                checkForEmptyShelf(newShelf);
+                ;
             }
             else {
                 conn1.close();
@@ -369,10 +369,10 @@ public class CoilingActivity extends AppCompatActivity {
             alertUser("You were not able to add the items because the connection failed!");
             return;
         }
-        resetFields();
+
     }
 
-    /*public void updateFlags(String woNumber){
+    public void updateFlags(String woNumber){
         //while (rs.next()){
             int inStock = 0;
             int orderQuantity = 0;
@@ -409,32 +409,34 @@ public class CoilingActivity extends AppCompatActivity {
                     System.out.println("...." + placedFlag + removedFlag + "....");
 
                     orderQuantity = (int)rs.getFloat("QTY");
-                    conn.close();
                 }
-                System.out.println("flags end of second query");
+                conn.close();
+                System.out.println("flags end of second query" + placedFlag);
 
-                if(placedFlag != "Y" && removedFlag != "Y" && orderQuantity == inStock){
-                    String query6 = "UPDATE [schedule] SET [Flag_CoilsDONE] = 'Y' WHERE [COILWO] = ?";
+
+                if(orderQuantity == inStock){
+                    String query6 = "UPDATE [schedule] SET [Flag_CoilsDONE] = ? WHERE [COILWO] = ?";
                     Connection conn6 = CONN();
                     System.out.println("flags end here1");
                     PreparedStatement ps6 = conn6.prepareStatement(query6);
                     System.out.println("flags end of here2");
-                    woNumber = "6835855";
-                    ps6.setString(1, woNumber);
+                    ps6.setString(1, "Y");
+                    ps6.setString(2, woNumber);
                     System.out.println("flags end of here3");
-                    ps6.execute();
+                    ps6.executeUpdate();
                     System.out.println("flags end of here4");
                     conn6.close();
-                    System.out.println("flags end of first update");
+                    System.out.println("flags end of first update......" + woNumber);
 
                 }
-                else if(placedFlag == "Y" && removedFlag != "Y" && inStock == 0){
+                else if(placedFlag.equals("Y") && inStock == 0){
                     String query2 = "UPDATE [testDB].[dbo].[schedule]" +
-                            "SET [Flag_SchedDONE] = 'Y'" +
+                            "SET [Flag_SchedDONE] = ?" +
                             "WHERE [COILWO] = ?";
                     Connection conn2 = CONN();
                     PreparedStatement ps2 = conn2.prepareStatement(query2);
-                    ps2.setString(1, woNumber);
+                    ps2.setString(1, "Y");
+                    ps2.setString(2, woNumber);
                     ps2.executeUpdate();
                     conn2.close();
                     System.out.println("flags end of second update");
@@ -446,7 +448,8 @@ public class CoilingActivity extends AppCompatActivity {
                 System.out.println(e);
                 System.out.println("oh no");
             }
-    }*/
+        resetFields();
+    }
 
     public void checkForEmptyShelf(String shelf){
         try {
@@ -461,7 +464,7 @@ public class CoilingActivity extends AppCompatActivity {
             while (resultSet.next()) {
                 stringArray[i] = resultSet.getString("serial");
                 System.out.println(stringArray[i]);
-                missingParts = missingParts.concat(stringArray[i] + " ");
+                missingParts = missingParts.concat(stringArray[i] + "  ");
                 System.out.println(missingParts);
                 i++;
             }

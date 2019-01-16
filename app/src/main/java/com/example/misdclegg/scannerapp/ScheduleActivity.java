@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.graphics.Color;
 import android.media.AudioManager;
 import android.media.SoundPool;
 import android.os.AsyncTask;
@@ -16,6 +17,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.Window;
@@ -64,6 +66,8 @@ public class ScheduleActivity extends AppCompatActivity{
     private String un;
     private String password;
 
+    Context context;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -88,6 +92,8 @@ public class ScheduleActivity extends AppCompatActivity{
         mSoundId = mSoundPool.load(this, R.raw.error, 1);
         mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
 
+
+        context = this;
         //mprogressBar = (ProgressBar) findViewById(R.id.progress_loader);
 
         //progressDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
@@ -141,8 +147,9 @@ public class ScheduleActivity extends AppCompatActivity{
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 LinearLayout clickedRow = (LinearLayout) view;
                 TextView woNumber = (TextView) clickedRow.getChildAt(2);
+                TextView inStock = (TextView) clickedRow.getChildAt(6);
                 System.out.println(woNumber.getText().toString());
-                returnToActivity(woNumber.getText().toString());
+                returnToActivity(woNumber.getText().toString(), Integer.parseInt(inStock.getText().toString()));
             }
         });
     }
@@ -204,7 +211,8 @@ public class ScheduleActivity extends AppCompatActivity{
 
     public void checkInput(){
 
-        mProgressBar.setVisibility(View.VISIBLE);
+
+        mProgressBar.bringToFront();
 
         String shift = "";
         String padPole = "";
@@ -224,12 +232,19 @@ public class ScheduleActivity extends AppCompatActivity{
 
         prodRun = prodRun.concat("-" + padPole);
 
-        searchSchedule(prodRun, shift);
-        mProgressBar.setVisibility(View.GONE);
+        new FileAsync().execute(prodRun, shift);
+
 
     }
 
-    public void searchSchedule(String prodRun, String shift){
+    //public void searchSchedule(String prodRun, String shift){
+
+
+///////////////////////////////////////////////////////////////////////////////
+
+
+////////////////////////////////////////////////////////////////////////////
+        /*
         String query = "SELECT *" +
                 "FROM [schedule]" +
                 "WHERE [SHIFT] = ?" +
@@ -286,7 +301,8 @@ public class ScheduleActivity extends AppCompatActivity{
             System.out.println(e);
             alertUser("Make sure you have entered a Production Run number like 'yymmdd'!");
         }
-    }
+        */
+    //}
 
     private void alertUser(String content){
         alertDialog = new AlertDialog.Builder(ScheduleActivity.this).create();
@@ -302,13 +318,115 @@ public class ScheduleActivity extends AppCompatActivity{
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
     }
 
-    private void returnToActivity(String woNumber){
-        Intent intent = new Intent(ScheduleActivity.this, LocationActivity.class);
+    private void returnToActivity(String woNumber, int inStock){
         Bundle myBundle = new Bundle();
         myBundle.putString("USERNAME", un);
         myBundle.putString("PASSWORD", password);
-        myBundle.putString("MISSING", woNumber);
-        intent.putExtras(myBundle);
-        startActivity(intent);
+        System.out.println(",,,,,,,,,,,,,," + inStock);
+        if(inStock > 0) {
+            Intent intent = new Intent(ScheduleActivity.this, LocationActivity.class);
+            myBundle.putString("MISSING", woNumber);
+            myBundle.putString("ACTIVITY", "ScheduleActivity");
+            intent.putExtras(myBundle);
+            startActivity(intent);
+        }
+        else {
+            Intent intent = new Intent(ScheduleActivity.this, CoilingActivity.class);
+            myBundle.putString("SERIAL", woNumber);
+            intent.putExtras(myBundle);
+            startActivity(intent);
+        }
+
     }
+
+    public void inflateList(ArrayList<ScheduleClass> arrayOfSchedules){
+        ScheduleAdapter adapter = new ScheduleAdapter(this, arrayOfSchedules);
+        mListView.setAdapter(adapter);
+    }
+
+    //////////////////////////////////////////////////////////////////////
+    //*
+    class FileAsync extends AsyncTask<String, String, ArrayList> {
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            mProgressBar.setVisibility(View.VISIBLE);
+
+        }
+
+        @Override
+        protected ArrayList<ScheduleClass> doInBackground(String... params) {
+            String prodRun = params[0];
+            String shift = params[1];
+            String query = "SELECT *" +
+                    "FROM [schedule]" +
+                    "WHERE [SHIFT] = ?" +
+                    "AND [PRDRUN] = ?";
+            try{
+                ArrayList<ScheduleClass> arrayOfSchedules = new ArrayList<ScheduleClass>();
+
+                Connection conn = CONN();
+                PreparedStatement ps = conn.prepareStatement(query);
+                ps.setString(1, shift);
+                ps.setString(2, prodRun);
+                ResultSet rs = ps.executeQuery();
+
+                while (rs.next()){
+
+                    String s, t;
+                    s = rs.getString("Flag_SchedDONE");
+                    t = rs.getString("Flag_CoilsDONE");
+                    if (s != null) {
+                        System.out.println(rs.getString("Flag_SchedDONE"));
+                        s = (s.trim()).toUpperCase();
+                        if(s.equals("Y")) {
+                            continue;
+                        }
+                    }
+
+                    int inStock = 0;
+                    try {
+                        String query1 = "SELECT *" +
+                                "FROM [WrappingTable]" +
+                                "WHERE [serial] = ?";
+                        Connection conn1 = CONN();
+                        PreparedStatement ps1 = conn1.prepareStatement(query1);
+                        ps1.setString(1, rs.getString("COILWO"));
+                        ResultSet rs1 = ps1.executeQuery();
+
+                        while (rs1.next()) {
+                            inStock = inStock + rs1.getInt("quantity");
+                        }
+                        conn1.close();
+                    }
+                    catch (Exception e){                }
+                    ScheduleClass newRecord = new ScheduleClass(rs.getString("SEQ"), rs.getString("COILWO"), rs.getFloat("QTY"), inStock, t);
+                    arrayOfSchedules.add(newRecord);
+                    System.out.println("retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
+                }
+                conn.close();
+                System.out.println("success.........");
+                //inflateList(arrayOfSchedules);
+                return arrayOfSchedules;
+            }
+            catch (Exception e){
+                System.out.println(e);
+                alertUser("Make sure you have entered a Production Run number like 'yymmdd'!");
+            }
+            return null;
+        }
+        protected void onProgressUpdate(String... progress) {
+            Log.d("ANDRO_ASYNC",progress[0]);
+
+        }
+        @Override
+        protected void onPostExecute(ArrayList arrayList){
+            ScheduleAdapter adapter = new ScheduleAdapter(context, arrayList);
+            mListView.setAdapter(adapter);
+            mProgressBar.setVisibility(View.GONE);
+        }
+    }
+    //*/
+    /////////////////////////////////////////////////////////////////////////
 }
