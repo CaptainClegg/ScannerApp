@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
     }
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -81,13 +81,13 @@ public class MainActivity extends AppCompatActivity {
             Log.e("ERRO3", e.getMessage());
         }
         return conn;
-    }
+    }*/
 
     public void insertSerial(String newSerial){
         String query = " insert into TestTable (serialNumber)" + "values (?)";
 
         try {
-            Connection conn = CONN();
+            Connection conn = new ConnectionHelper().getConnection();
             PreparedStatement preparedStmt = conn.prepareStatement(query);
             preparedStmt.setString (1, newSerial);
             preparedStmt.execute();
@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
             password = myBundle.getString("PASSWORD", "");
             mTopDb.setTextColor(Color.BLACK);
             mTopUser.setTextColor(Color.BLACK);
-            Connection con = CONN();
+            Connection con = new ConnectionHelper().getConnection();
             if(con == null)
                 throw new Exception("the db did not connect");
         }
@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 try{
-                    Connection conn = CONN();
+                    Connection conn = new ConnectionHelper().getConnection();
                     String query = "SELECT serial, descript, classification, condition, reporter FROM InventoryTable";
                     //TODO transfer microsoft sql to sqlite
                 }

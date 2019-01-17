@@ -77,6 +77,9 @@ public class LoginActivity extends AppCompatActivity {
         editor.remove("PASSWORD");
         editor.remove("SHIFT_RADIO");
         editor.remove("PADPOLE_RADIO");
+        editor.remove("START_COILING_SERIAL");
+        editor.remove("START_COILING_LOCATION");
+        editor.remove("START_COILING_QUANTITY");
         editor.apply();
 
         try {

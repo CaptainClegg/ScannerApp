@@ -52,10 +52,10 @@ public class CoilingActivity extends AppCompatActivity {
     private Button mUpload;
     private Button mViewLocations;
     private Button mViewSchedule;
+    private Button mViewEmpty;
 
-    private RadioGroup mRadioGroup;
-    private RadioButton mRadioEmpty;
-    private RadioButton mRadioFull;
+    //private RadioGroup mRadioGroup;
+    //private RadioButton mRadioEmpty;
 
     private TextView mTopUser;
     private TextView mTopDb;
@@ -88,8 +88,8 @@ public class CoilingActivity extends AppCompatActivity {
 
             Class.forName(getString(R.string.required_jdbc));
             ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
-                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
-                    + password + ";";
+                    + "databaseName=" + "testDB" + ";user=" + "sa" + ";password="
+                    + "admin123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
             Log.e("ERRO1", se.getMessage());
@@ -118,10 +118,10 @@ public class CoilingActivity extends AppCompatActivity {
         mUpload = (Button) findViewById(R.id.wrapping_upload);
         mViewLocations = (Button) findViewById(R.id.location_view);
         mViewSchedule = (Button) findViewById(R.id.bottom_view);
+        mViewEmpty = (Button) findViewById(R.id.empty_view);
 
-        mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
-        mRadioEmpty = (RadioButton) findViewById(R.id.radio_button);
-        mRadioFull = (RadioButton) findViewById(R.id.radio_two);
+        //mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
+        //mRadioEmpty = (RadioButton) findViewById(R.id.radio_button);
 
         mTopUser = (TextView) findViewById(R.id.top_user);
         mTopDb = (TextView) findViewById(R.id.top_db);
@@ -129,9 +129,6 @@ public class CoilingActivity extends AppCompatActivity {
         mDatabaseHelper = new DatabaseHelper(this);
 
         try {
-            Bundle myBundle = getIntent().getExtras();
-            un = myBundle.getString("USERNAME", "");
-            password = myBundle.getString("PASSWORD", "");
             mTopUser.setTextColor(Color.BLACK);
             Connection con = CONN();
             if(con == null)
@@ -147,9 +144,22 @@ public class CoilingActivity extends AppCompatActivity {
 
         try{
             Bundle myBundle = getIntent().getExtras();
-            mProductInput.setText(myBundle.getString("SERIAL", ""));
-            mShelfInput.setText(myBundle.getString("LOCATION", ""));
-            mQuantityInput.setText(myBundle.getString("QUANTITY", ""));
+            String bundleSerial = myBundle.getString("SERIAL", "");
+            String bundleLocation = myBundle.getString("LOCATION", "");
+            String bundleQuantity = myBundle.getString("QUANTITY", "");
+            SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+            if(bundleSerial.length() > 0)
+                mProductInput.setText(bundleSerial);
+            else
+                mProductInput.setText(sharedPref.getString("START_COILING_SERIAL", ""));
+            if(bundleLocation.length() > 0)
+                mShelfInput.setText(bundleLocation);
+            else
+                mShelfInput.setText(sharedPref.getString("START_COILING_LOCATION", ""));
+            if(bundleQuantity.length() > 0)
+                mQuantityInput.setText(bundleQuantity);
+            else
+                mQuantityInput.setText(sharedPref.getString("START_COILING_QUANTITY", ""));
         }
         catch (Exception e){
 
@@ -228,14 +238,11 @@ public class CoilingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(mProductInput.getText().toString().length() > 0 && mShelfInput.getText().toString().length() > 0
-                        && mQuantityInput.getText().toString().length() > 0 && mQuantityInput.getText().toString().length() < 6
-                        && mRadioGroup.getCheckedRadioButtonId() != -1)
+                        && mQuantityInput.getText().toString().length() > 0 && mQuantityInput.getText().toString().length() < 6)
+                        //&& mRadioGroup.getCheckedRadioButtonId() != -1
                     submitClear();
                 else {
                     alertUser("Check to make sure you have entered all the values, and try again");
-                    View radioView = mRadioGroup.findViewById(mRadioGroup.getCheckedRadioButtonId());
-                    int radioIndex = mRadioGroup.indexOfChild(radioView);
-                    System.out.println(radioIndex);
                 }
             }
         });
@@ -264,19 +271,52 @@ public class CoilingActivity extends AppCompatActivity {
             }
         });
 
-
+        mViewEmpty.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CoilingActivity.this, EmptyLocationsActivity.class);
+                Bundle myBundle = new Bundle();
+                myBundle.putString("USERNAME", un);
+                myBundle.putString("PASSWORD", password);
+                intent.putExtras(myBundle);
+                startActivity(intent);
+            }
+        });
     }
 
     @Override
     protected void onPause(){
         super.onPause();
         System.out.println("onpause was called");
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString("START_COILING_SERIAL", mProductInput.getText().toString());
+        editor.putString("START_COILING_LOCATION", mShelfInput.getText().toString());
+        editor.putString("START_COILING_QUANTITY", mQuantityInput.getText().toString());
+        editor.apply();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
         System.out.println("onResume Called");
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
+        final SharedPreferences.Editor editor = sharedPref.edit();
+        editor.remove("WONUMBER");
+        editor.remove("PRODRUN");
+        editor.remove("USERNAME");
+        editor.remove("PASSWORD");
+        editor.remove("SHIFT_RADIO");
+        editor.remove("PADPOLE_RADIO");
+        editor.remove("START_COILING_SERIAL");
+        editor.remove("START_COILING_LOCATION");
+        editor.remove("START_COILING_QUANTITY");
+        editor.apply();
     }
 
     public void submitClear() {
@@ -290,8 +330,8 @@ public class CoilingActivity extends AppCompatActivity {
         mShelfInput.getText().clear();
         mQuantityInput.getText().clear();
         mProductInput.requestFocus();
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        //imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
     }
 
     public void updateBin(String newSerial, String newShelf, String updateQuantity){
@@ -344,9 +384,9 @@ public class CoilingActivity extends AppCompatActivity {
                         preparedStmt.setString (2, newShelf);
                         preparedStmt.execute();
                         conn2.close();
-                        if(mRadioEmpty.isChecked()){
-                            checkForEmptyShelf(newShelf);
-                        }
+                        //if(mRadioEmpty.isChecked()){
+                        //    checkForEmptyShelf(newShelf);
+                        //}
                     }
                 }
             }
@@ -451,7 +491,7 @@ public class CoilingActivity extends AppCompatActivity {
         resetFields();
     }
 
-    public void checkForEmptyShelf(String shelf){
+    /*public void checkForEmptyShelf(String shelf){
         try {
             Connection conn1 = CONN();
             String query = "select * from WrappingTable where shelf = ?";
@@ -477,7 +517,7 @@ public class CoilingActivity extends AppCompatActivity {
         }
         catch (Exception e){
         }
-    }
+    }*/
 
     private void alertUser(String content){
         alertDialog = new AlertDialog.Builder(CoilingActivity.this).create();
@@ -493,24 +533,24 @@ public class CoilingActivity extends AppCompatActivity {
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
     }
 
-    private void questionUser(String content, final String firstSerial){
+    /*private void questionUser(String content, final String firstSerial){
         System.out.println("the allert was called");
         alertDialog = new AlertDialog.Builder(CoilingActivity.this).create();
         alertDialog.setTitle("Alert");
         alertDialog.setMessage(content);
-        alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                        //todo send error report
-                    }
-                });
-        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Shelf not Empty",
-                new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.dismiss();
-                    }
-                });
+        //alertDialog.setButton(AlertDialog.BUTTON_NEGATIVE, "Ignore",
+          //      new DialogInterface.OnClickListener() {
+            //        public void onClick(DialogInterface dialog, int which) {
+              //          dialog.dismiss();
+                //        //todo send error report
+                  //  }
+                //});
+        //alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Shelf not Empty",
+          //      new DialogInterface.OnClickListener() {
+            //        public void onClick(DialogInterface dialog, int which) {
+              //          dialog.dismiss();
+                //    }
+                //});
         alertDialog.setButton(AlertDialog.BUTTON_POSITIVE, "Show Locations of Missing Item",
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
@@ -527,6 +567,6 @@ public class CoilingActivity extends AppCompatActivity {
                 });
         alertDialog.show();
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
-    }
+    }*/
 
 }

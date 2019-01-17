@@ -45,7 +45,7 @@ public class LocationActivity extends AppCompatActivity {
 
 
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -67,7 +67,7 @@ public class LocationActivity extends AppCompatActivity {
             Log.e("ERRO3", e.getMessage());
         }
         return conn;
-    }
+    }*/
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -133,7 +133,7 @@ public class LocationActivity extends AppCompatActivity {
             Bundle myBundle = getIntent().getExtras();
             un = myBundle.getString("USERNAME", "");
             password = myBundle.getString("PASSWORD", "");
-            Connection con = CONN();
+            Connection con = new ConnectionHelper().getConnection();
             if(con == null)
                 throw new Exception("the db did not connect");
             System.out.println(myBundle);
@@ -194,12 +194,12 @@ public class LocationActivity extends AppCompatActivity {
         }
     }
 
-    public void searchLocation(String woNumber){
+    private void searchLocation(String woNumber){
         String query = "Select * from WrappingTable WHERE serial = ?";
         try{
             ArrayList<WrappingClass> arrayOfLocations = new ArrayList<WrappingClass>();
 
-            Connection conn = CONN();
+            Connection conn = new ConnectionHelper().getConnection();
             PreparedStatement ps = conn.prepareStatement(query);
             ps.setString(1, woNumber);
             ResultSet rs = ps.executeQuery();
@@ -234,7 +234,7 @@ public class LocationActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public static void hideKeyboard(Activity activity) {
+    private static void hideKeyboard(Activity activity) {
         InputMethodManager imm = (InputMethodManager) activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
         //Find the currently focused view, so we can grab the correct window token from it.
         View view = activity.getCurrentFocus();

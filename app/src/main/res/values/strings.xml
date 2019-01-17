@@ -55,5 +55,7 @@
     <string name="order_title">SEQ</string>
     <string name="work_order_title">WO #</string>
     <string name="stock_title">In Stock</string>
+    <string name="view_empty_locations">See Empty Locations</string>
+    <string name="empty_location_title">Empty Locations</string>
 
 </resources>

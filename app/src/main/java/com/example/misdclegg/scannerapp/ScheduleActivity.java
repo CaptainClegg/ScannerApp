@@ -196,8 +196,8 @@ public class ScheduleActivity extends AppCompatActivity{
 
             Class.forName(getString(R.string.required_jdbc));
             ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
-                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
-                    + password + ";";
+                    + "databaseName=" + getString(R.string.database) + ";user=" + "sa" + ";password="
+                    + "admin123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
             Log.e("ERRO1", se.getMessage());
