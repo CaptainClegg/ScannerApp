@@ -150,9 +150,9 @@ public class LoginActivity extends AppCompatActivity {
         try {
 
             Class.forName(getString(R.string.required_jdbc));
-            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
-                    + "databaseName=" + getString(R.string.database) + ";user=" + un + ";password="
-                    + password + ";";
+            ConnURL = "jdbc:jtds:sqlserver://" + "dyr09" + ":1433/"
+                    + "WindingCoilInv;" + "instance=" + "SQLEXPRESS"
+                    + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
 
         } catch (SQLException se) {

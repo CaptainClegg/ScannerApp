@@ -48,17 +48,18 @@ public class CoilingActivity extends AppCompatActivity {
     private EditText mShelfInput;
     private EditText mQuantityInput;
 
-    private Button mSignout;
+    //private Button mSignout;
     private Button mUpload;
     private Button mViewLocations;
     private Button mViewSchedule;
     private Button mViewEmpty;
+    private Button mViewFullList;
 
     //private RadioGroup mRadioGroup;
     //private RadioButton mRadioEmpty;
 
-    private TextView mTopUser;
-    private TextView mTopDb;
+    //private TextView mTopUser;
+    //private TextView mTopDb;
 
     private SoundPool mSoundPool;
     private int mSoundId;
@@ -87,9 +88,9 @@ public class CoilingActivity extends AppCompatActivity {
         try {
 
             Class.forName(getString(R.string.required_jdbc));
-            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
-                    + "databaseName=" + "testDB" + ";user=" + "sa" + ";password="
-                    + "admin123" + ";";
+            ConnURL = "jdbc:jtds:sqlserver://" + "dyr09" + ":1433/"
+                    + "WindingCoilInv;" + "instance=" + "SQLEXPRESS"
+                    + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
             Log.e("ERRO1", se.getMessage());
@@ -114,32 +115,30 @@ public class CoilingActivity extends AppCompatActivity {
         mShelfInput = (EditText) findViewById(R.id.wrapping_shelf);
         mQuantityInput = (EditText) findViewById(R.id.wrapping_quantity);
 
-        mSignout = (Button) findViewById(R.id.sign_out);
+        //mSignout = (Button) findViewById(R.id.sign_out);
         mUpload = (Button) findViewById(R.id.wrapping_upload);
         mViewLocations = (Button) findViewById(R.id.location_view);
         mViewSchedule = (Button) findViewById(R.id.bottom_view);
         mViewEmpty = (Button) findViewById(R.id.empty_view);
+        mViewFullList = (Button) findViewById(R.id.full_view);
 
         //mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
         //mRadioEmpty = (RadioButton) findViewById(R.id.radio_button);
 
-        mTopUser = (TextView) findViewById(R.id.top_user);
-        mTopDb = (TextView) findViewById(R.id.top_db);
+        //mTopUser = (TextView) findViewById(R.id.top_user);
+        //mTopDb = (TextView) findViewById(R.id.top_db);
 
         mDatabaseHelper = new DatabaseHelper(this);
 
         try {
-            mTopUser.setTextColor(Color.BLACK);
+            //mTopUser.setTextColor(Color.BLACK);
             Connection con = CONN();
             if(con == null)
                 throw new Exception("the db did not connect");
         }
         catch (Exception e){
             System.out.println(e);
-            un = "You are not connected to a database";
-            mTopDb.setVisibility(View.GONE);
-            mTopUser.setTextColor(Color.RED);
-            password = "";
+            alertUser("You are not connected to a database");
         }
 
         try{
@@ -165,7 +164,7 @@ public class CoilingActivity extends AppCompatActivity {
 
         }
 
-        mTopUser.setText(un);
+        //mTopUser.setText(un);
         //mTopDb.setText(db);
 
 
@@ -223,7 +222,7 @@ public class CoilingActivity extends AppCompatActivity {
             }
         });
 
-        mSignout.setOnClickListener(new View.OnClickListener(){
+        /*mSignout.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(CoilingActivity.this, LoginActivity.class);
@@ -232,13 +231,13 @@ public class CoilingActivity extends AppCompatActivity {
                 intent.putExtras(myBundle);
                 startActivity(intent);
             }
-        });
+        });*/
 
         mUpload.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if(mProductInput.getText().toString().length() > 0 && mShelfInput.getText().toString().length() > 0
-                        && mQuantityInput.getText().toString().length() > 0 && mQuantityInput.getText().toString().length() < 6)
+                        && mQuantityInput.getText().toString().length() > 0)
                         //&& mRadioGroup.getCheckedRadioButtonId() != -1
                     submitClear();
                 else {
@@ -279,6 +278,18 @@ public class CoilingActivity extends AppCompatActivity {
                 myBundle.putString("USERNAME", un);
                 myBundle.putString("PASSWORD", password);
                 intent.putExtras(myBundle);
+                startActivity(intent);
+            }
+        });
+
+        mViewFullList.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(CoilingActivity.this, FullActivity.class);
+                //Bundle myBundle = new Bundle();
+                //myBundle.putString("USERNAME", un);
+                //myBundle.putString("PASSWORD", password);
+                //intent.putExtras(myBundle);
                 startActivity(intent);
             }
         });
@@ -406,7 +417,9 @@ public class CoilingActivity extends AppCompatActivity {
             }
         }
         catch (Exception e){
-            alertUser("You were not able to add the items because the connection failed!");
+            System.out.println(e);
+            System.out.println("!!!!!!!!!!!!the bug appeared!!!!!!!!!!!!!!");
+            //alertUser("You were not able to add the items because the connection failed!");
             return;
         }
 

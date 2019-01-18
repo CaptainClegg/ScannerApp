@@ -26,9 +26,9 @@ public class ConnectionHelper extends AppCompatActivity {
         try {
 
             //Class.forName(getString(R.string.required_jdbc));
-            ConnURL = "jdbc:jtds:sqlserver://" + "10.100.18.125" + ":1433;"
-                    + "databaseName=" + "testDB" + ";user=" + un + ";password="
-                    + password + ";";
+            ConnURL = "jdbc:jtds:sqlserver://" + "dyr09" + ":1433/"
+                    + "WindingCoilInv;" + "instance=" + "SQLEXPRESS"
+                    + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
 
         } catch (SQLException se) {

@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+<LinearLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,16 +15,6 @@
         android:textSize="25sp"
         />
 
-    <EditText
-        android:id="@+id/wo_input"
-        android:paddingTop="7dp"
-        android:layout_width="170dp"
-        android:layout_height="wrap_content"
-        android:inputType="number"
-        android:imeOptions="actionSend"
-        android:layout_gravity="center"
-        android:hint="@string/location_hint"/>
-
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="30dp"
@@ -29,14 +22,21 @@
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".5"
+            android:layout_weight=".40"
+            android:text="@string/work_order_title"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            />
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".40"
             android:text="@string/location_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             />
         <TextView
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight=".5"
+            android:layout_weight=".20"
             android:text="@string/quantity_title"
             android:textAppearance="?android:attr/textAppearanceLarge"
             />
@@ -48,9 +48,17 @@
         android:background="#000"/>
 
     <ListView
-        android:id="@+id/location_list"
+        android:id="@+id/full_list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
     </ListView>
-    
+
 </LinearLayout>
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:elevation="1dp"
+        android:layout_gravity="center"
+        android:visibility="gone"/>
+</FrameLayout>

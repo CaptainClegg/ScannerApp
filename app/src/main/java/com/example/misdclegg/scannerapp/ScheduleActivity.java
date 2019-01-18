@@ -195,9 +195,9 @@ public class ScheduleActivity extends AppCompatActivity{
         try {
 
             Class.forName(getString(R.string.required_jdbc));
-            ConnURL = "jdbc:jtds:sqlserver://" + getString(R.string.ip_address) + ":1433;"
-                    + "databaseName=" + getString(R.string.database) + ";user=" + "sa" + ";password="
-                    + "admin123" + ";";
+            ConnURL = "jdbc:jtds:sqlserver://" + "dyr09" + ":1433/"
+                    + "WindingCoilInv;" + "instance=" + "SQLEXPRESS"
+                    + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
             Log.e("ERRO1", se.getMessage());
@@ -320,8 +320,8 @@ public class ScheduleActivity extends AppCompatActivity{
 
     private void returnToActivity(String woNumber, int inStock){
         Bundle myBundle = new Bundle();
-        myBundle.putString("USERNAME", un);
-        myBundle.putString("PASSWORD", password);
+        //myBundle.putString("USERNAME", un);
+        //myBundle.putString("PASSWORD", password);
         System.out.println(",,,,,,,,,,,,,," + inStock);
         if(inStock > 0) {
             Intent intent = new Intent(ScheduleActivity.this, LocationActivity.class);
@@ -344,8 +344,7 @@ public class ScheduleActivity extends AppCompatActivity{
         mListView.setAdapter(adapter);
     }
 
-    //////////////////////////////////////////////////////////////////////
-    //*
+
     class FileAsync extends AsyncTask<String, String, ArrayList> {
 
         @Override
@@ -427,6 +426,5 @@ public class ScheduleActivity extends AppCompatActivity{
             mProgressBar.setVisibility(View.GONE);
         }
     }
-    //*/
-    /////////////////////////////////////////////////////////////////////////
+
 }

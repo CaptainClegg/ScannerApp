@@ -3,7 +3,7 @@
     android:layout_height="match_parent"
     android:layout_width="match_parent">
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="110px"
         android:gravity="top"
@@ -34,13 +34,13 @@
             android:layout_weight=".30"
             android:layout_height="match_parent"
             android:text="@string/signOut" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="-100dp"
-        android:gravity="center"
+        android:layout_marginTop="40dp"
+        android:gravity="top|center_horizontal"
         android:orientation="vertical">
 
         <TextView
@@ -63,18 +63,21 @@
                 android:orientation="vertical">
                 <TextView
                     android:layout_width="match_parent"
-                    android:paddingTop="15px"
-                    android:layout_height="75px"
+                    android:paddingTop="2dp"
+                    android:layout_height="45dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/wrap_serial"/>
                 <TextView
                     android:layout_width="match_parent"
-                    android:paddingTop="15px"
-                    android:layout_height="75px"
+                    android:paddingTop="2dp"
+                    android:layout_height="45dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/wrap_shelf" />
                 <TextView
                     android:layout_width="match_parent"
-                    android:paddingTop="15px"
-                    android:layout_height="75px"
+                    android:paddingTop="2dp"
+                    android:layout_height="45dp"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:text="@string/wrap_quantity"/>
 
             </LinearLayout>
@@ -82,30 +85,34 @@
             <LinearLayout
                 android:layout_width="350px"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
                 android:orientation="vertical">
 
                 <EditText
                     android:id="@+id/wrapping_serial"
                     android:layout_width="match_parent"
-                    android:paddingTop="10px"
-                    android:layout_height="75px"
+                    android:backgroundTint="#000"
+                    android:layout_height="45dp"
                     android:inputType="number"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:imeOptions="actionNext"/>
 
                 <EditText
                     android:id="@+id/wrapping_shelf"
                     android:layout_width="match_parent"
-                    android:paddingTop="10px"
-                    android:layout_height="75px"
+                    android:backgroundTint="#000"
+                    android:layout_height="45dp"
                     android:inputType="text"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:imeOptions="actionNext"/>
 
                 <EditText
                     android:id="@+id/wrapping_quantity"
                     android:layout_width="match_parent"
-                    android:paddingTop="10px"
-                    android:layout_height="75px"
+                    android:backgroundTint="#000"
+                    android:layout_height="45dp"
                     android:inputType="number"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
                     android:imeOptions="actionSend" />
             </LinearLayout>
         </LinearLayout>
@@ -113,6 +120,7 @@
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:paddingTop="10dp"
         android:orientation="horizontal">
 
         <!--<LinearLayout
@@ -148,6 +156,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:layout_marginLeft="15dp"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/add"/>
     </LinearLayout>
     </LinearLayout>
@@ -156,15 +165,23 @@
         android:id="@+id/last_linear"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        android:layout_marginTop="370dp"
+        android:layout_marginTop="430dp"
         android:gravity="center"
         >
 
         <Button
             android:id="@+id/empty_view"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_weight=".5"
             android:text="@string/view_empty_locations"/>
+
+        <Button
+            android:id="@+id/full_view"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight=".5"
+            android:text="@string/view_all_items"/>
 
     </LinearLayout>
 

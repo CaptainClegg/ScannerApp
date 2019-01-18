@@ -225,8 +225,8 @@ public class LocationActivity extends AppCompatActivity {
     private void returnToActivity(String location, String quantity){
         Intent intent = new Intent(LocationActivity.this, CoilingActivity.class);
         Bundle myBundle = new Bundle();
-        myBundle.putString("USERNAME", un);
-        myBundle.putString("PASSWORD", password);
+        //myBundle.putString("USERNAME", un);
+        //myBundle.putString("PASSWORD", password);
         myBundle.putString("LOCATION", location);
         myBundle.putString("SERIAL", mWorkOrderInput.getText().toString());
         myBundle.putString("QUANTITY", quantity);

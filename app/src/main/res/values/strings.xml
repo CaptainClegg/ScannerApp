@@ -3,7 +3,7 @@
     <string name="database">testDB</string>
     <string name="required_jdbc">net.sourceforge.jtds.jdbc.Driver</string>
 
-    <string name="app_name">ScannerApp</string>
+    <string name="app_name">Coil Inv.</string>
     <string name="welcome">Inventory Management</string>
     <string name="manual">Manual Input</string>
     <string name="submit">Submit</string>
@@ -18,10 +18,10 @@
     <string name="view">View Inventory</string>
     <string name="add">Update Bin</string>
     <string name="view_schedule">View Schedule</string>
-    <string name="wrap_quantity">Bin\'s New Quantity:</string>
+    <string name="wrap_quantity">Bin\'s New Qty:</string>
     <string name="wrap_shelf">Bin Location:</string>
     <string name="wrap_serial">Work Order #:</string>
-    <string name="view_locations">View Locations</string>
+    <string name="view_locations">View Loc. by WO</string>
     <string name="winding_spinner_prompt">Choose Activity</string>
     <!--<string name="location_column_2">quantity</string>
     <string name="location_column_1">location</string>-->
@@ -57,5 +57,6 @@
     <string name="stock_title">In Stock</string>
     <string name="view_empty_locations">See Empty Locations</string>
     <string name="empty_location_title">Empty Locations</string>
+    <string name="view_all_items">See all Items</string>
 
 </resources>
