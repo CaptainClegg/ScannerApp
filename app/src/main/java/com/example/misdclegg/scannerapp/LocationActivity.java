@@ -12,7 +12,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -81,10 +81,8 @@ public class LocationActivity extends AppCompatActivity {
 
         mWorkOrderInput.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                System.out.println("the enter was called");
                 if (actionId == EditorInfo.IME_ACTION_SEND) {
                     searchLocation(mWorkOrderInput.getText().toString());
-                    System.out.println("the enter worked");
                     return true;
                 }
                 return false;
@@ -117,8 +115,6 @@ public class LocationActivity extends AppCompatActivity {
                 TableRow rowTable = (TableRow) clickedRow.getChildAt(0);
                 TextView location = (TextView) rowTable.getChildAt(0);
                 TextView quantity = (TextView) rowTable.getChildAt(2);
-                System.out.println(location.getText().toString());
-                System.out.println(quantity.getText().toString());
                 returnToActivity(location.getText().toString(), quantity.getText().toString());
             }
         });
@@ -127,7 +123,6 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onStart() {
         super.onStart();
-        System.out.println("logcat from start");
 
         try {
             Bundle myBundle = getIntent().getExtras();
@@ -136,19 +131,16 @@ public class LocationActivity extends AppCompatActivity {
             Connection con = new ConnectionHelper().getConnection();
             if(con == null)
                 throw new Exception("the db did not connect");
-            System.out.println(myBundle);
         }
         catch (Exception e){
             un = "";
             password = "";
-            System.out.println("error retrieving bundle");
         }
     }
 
     @Override
     protected void onPause(){
         super.onPause();
-        System.out.println("onpause was called");
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("WONUMBER", mWorkOrderInput.getText().toString());
@@ -158,13 +150,12 @@ public class LocationActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        System.out.println("onResume Called");
         try{
             Bundle myBundle = getIntent().getExtras();
             mWorkOrderInput.setText(myBundle.getString("MISSING", ""));
             if (myBundle.getString("MISSING", "") == "")
                 throw new Exception("the process was not called automatically");
-            System.out.println("the string was passed." + myBundle.getString("MISSING", "") + ".");
+            //"the string was passed." + myBundle.getString("MISSING", "") + ".");
             searchLocation(mWorkOrderInput.getText().toString());
         }
         catch (Exception e) {
@@ -207,18 +198,18 @@ public class LocationActivity extends AppCompatActivity {
             while (rs.next()){
                 WrappingClass newRecord = new WrappingClass(rs.getString("shelf"), rs.getInt("quantity"));
                 arrayOfLocations.add(newRecord);
-                System.out.println("retrieved from database" + newRecord.getShelf() + newRecord.getQuantity());
+                //"retrieved from database" + newRecord.getShelf() + newRecord.getQuantity());
             }
 
             LocationAdapter adapter = new LocationAdapter(this, arrayOfLocations);
             mListView.setAdapter(adapter);
 
             conn.close();
-            System.out.println("success.........");
+            //"success.........");
         }
         catch (Exception e){
-            System.out.println(e);
-            System.out.println("there was an error that was caught");
+            //e);
+            //"there was an error that was caught");
         }
     }
 

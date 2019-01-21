@@ -13,7 +13,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -95,7 +95,7 @@ public class MainActivity extends AppCompatActivity {
 
         }
         catch (Exception e){
-            System.out.println("error after connection and before close");
+
         }
     }
 
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity {
                         db_connect_string,
                         db_userid,
                         db_password);
-                System.out.println( "connected" );
+
             }
             catch( SQLException e ){
                 e.printStackTrace();

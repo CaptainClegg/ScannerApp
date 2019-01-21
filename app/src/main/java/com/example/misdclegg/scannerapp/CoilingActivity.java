@@ -17,7 +17,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -93,11 +93,8 @@ public class CoilingActivity extends AppCompatActivity {
                     + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
-            Log.e("ERRO1", se.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.e("ERRO2", e.getMessage());
         } catch (Exception e) {
-            Log.e("ERRO3", e.getMessage());
         }
         return conn;
     }
@@ -137,7 +134,7 @@ public class CoilingActivity extends AppCompatActivity {
                 throw new Exception("the db did not connect");
         }
         catch (Exception e){
-            System.out.println(e);
+
             alertUser("You are not connected to a database");
         }
 
@@ -298,7 +295,7 @@ public class CoilingActivity extends AppCompatActivity {
     @Override
     protected void onPause(){
         super.onPause();
-        System.out.println("onpause was called");
+
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("START_COILING_SERIAL", mProductInput.getText().toString());
@@ -310,7 +307,7 @@ public class CoilingActivity extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        System.out.println("onResume Called");
+
     }
 
     @Override
@@ -359,7 +356,7 @@ public class CoilingActivity extends AppCompatActivity {
             ResultSet resultSet = ps.executeQuery();
             if (resultSet.next()) {
                 oldQuantity = resultSet.getInt("quantity");
-                System.out.print(oldQuantity);
+
                 conn1.close();
 
                 if(Integer.parseInt(updateQuantity) > oldQuantity){
@@ -417,8 +414,8 @@ public class CoilingActivity extends AppCompatActivity {
             }
         }
         catch (Exception e){
-            System.out.println(e);
-            System.out.println("!!!!!!!!!!!!the bug appeared!!!!!!!!!!!!!!");
+
+
             //alertUser("You were not able to add the items because the connection failed!");
             return;
         }
@@ -433,7 +430,7 @@ public class CoilingActivity extends AppCompatActivity {
             String removedFlag = "";
 
             try {
-                System.out.println("start try of set flags");
+
 
                 String query1 = "SELECT *" +
                         "FROM [WrappingTable]" +
@@ -446,7 +443,7 @@ public class CoilingActivity extends AppCompatActivity {
                 while (rs1.next()) {
                     inStock = inStock + rs1.getInt("quantity");
                 }
-                System.out.println("flags end of first query");
+
 
                 conn1.close();
                 String query = "SELECT *" +
@@ -459,27 +456,21 @@ public class CoilingActivity extends AppCompatActivity {
                 while (rs.next()){
                     placedFlag = rs.getString("Flag_CoilsDONE");
                     removedFlag = rs.getString("Flag_SchedDONE");
-                    System.out.println("...." + placedFlag + removedFlag + "....");
+
 
                     orderQuantity = (int)rs.getFloat("QTY");
                 }
                 conn.close();
-                System.out.println("flags end of second query" + placedFlag);
 
 
                 if(orderQuantity == inStock){
                     String query6 = "UPDATE [schedule] SET [Flag_CoilsDONE] = ? WHERE [COILWO] = ?";
                     Connection conn6 = CONN();
-                    System.out.println("flags end here1");
                     PreparedStatement ps6 = conn6.prepareStatement(query6);
-                    System.out.println("flags end of here2");
                     ps6.setString(1, "Y");
                     ps6.setString(2, woNumber);
-                    System.out.println("flags end of here3");
                     ps6.executeUpdate();
-                    System.out.println("flags end of here4");
                     conn6.close();
-                    System.out.println("flags end of first update......" + woNumber);
 
                 }
                 else if(placedFlag.equals("Y") && inStock == 0){
@@ -492,14 +483,11 @@ public class CoilingActivity extends AppCompatActivity {
                     ps2.setString(2, woNumber);
                     ps2.executeUpdate();
                     conn2.close();
-                    System.out.println("flags end of second update");
                 }
                 else
-                    System.out.println("no flags were changed");
+                    ;
             }
             catch (Exception e){
-                System.out.println(e);
-                System.out.println("oh no");
             }
         resetFields();
     }
@@ -516,14 +504,14 @@ public class CoilingActivity extends AppCompatActivity {
             int i = 0;
             while (resultSet.next()) {
                 stringArray[i] = resultSet.getString("serial");
-                System.out.println(stringArray[i]);
+                //stringArray[i]);
                 missingParts = missingParts.concat(stringArray[i] + "  ");
-                System.out.println(missingParts);
+                //missingParts);
                 i++;
             }
             conn1.close();
             if(i != 0){
-                System.out.println("the if statement was called");
+                //"the if statement was called");
                 mMesage = "Are you sure the bin is empty? " + missingParts + " was believed to be here.";
                 questionUser(mMesage, stringArray[0]);
             }
@@ -547,7 +535,7 @@ public class CoilingActivity extends AppCompatActivity {
     }
 
     /*private void questionUser(String content, final String firstSerial){
-        System.out.println("the allert was called");
+        //"the allert was called");
         alertDialog = new AlertDialog.Builder(CoilingActivity.this).create();
         alertDialog.setTitle("Alert");
         alertDialog.setMessage(content);
@@ -568,7 +556,7 @@ public class CoilingActivity extends AppCompatActivity {
                 new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
-                        System.out.println("the user has time");
+                        //"the user has time");
                         Intent intent = new Intent(CoilingActivity.this, LocationActivity.class);
                         Bundle myBundle = new Bundle();
                         myBundle.putString("USERNAME", un);

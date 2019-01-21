@@ -16,7 +16,7 @@ import android.os.SystemClock;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
@@ -148,7 +148,7 @@ public class ScheduleActivity extends AppCompatActivity{
                 LinearLayout clickedRow = (LinearLayout) view;
                 TextView woNumber = (TextView) clickedRow.getChildAt(2);
                 TextView inStock = (TextView) clickedRow.getChildAt(6);
-                System.out.println(woNumber.getText().toString());
+                //woNumber.getText().toString());
                 returnToActivity(woNumber.getText().toString(), Integer.parseInt(inStock.getText().toString()));
             }
         });
@@ -157,7 +157,7 @@ public class ScheduleActivity extends AppCompatActivity{
     @Override
     protected void onPause(){
         super.onPause();
-        System.out.println("onpause was called");
+        //"onpause was called");
         SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString("PRODRUN", mProdRunInput.getText().toString());
@@ -169,7 +169,7 @@ public class ScheduleActivity extends AppCompatActivity{
     @Override
     protected void onResume(){
         super.onResume();
-        System.out.println("onResume Called");
+        //"onResume Called");
         try{
             SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
             mProdRunInput.setText(sharedPref.getString("PRODRUN", ""));
@@ -200,11 +200,8 @@ public class ScheduleActivity extends AppCompatActivity{
                     + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
-            Log.e("ERRO1", se.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.e("ERRO2", e.getMessage());
         } catch (Exception e) {
-            Log.e("ERRO3", e.getMessage());
         }
         return conn;
     }
@@ -264,7 +261,7 @@ public class ScheduleActivity extends AppCompatActivity{
                 s = rs.getString("Flag_SchedDONE");
                 t = rs.getString("Flag_CoilsDONE");
                 if (s != null) {
-                    System.out.println(rs.getString("Flag_SchedDONE"));
+                    //rs.getString("Flag_SchedDONE"));
                     s = (s.trim()).toUpperCase();
                     if(s.equals("Y")) {
                         continue;
@@ -289,16 +286,16 @@ public class ScheduleActivity extends AppCompatActivity{
                 catch (Exception e){                }
                 ScheduleClass newRecord = new ScheduleClass(rs.getString("SEQ"), rs.getString("COILWO"), rs.getFloat("QTY"), inStock, t);
                 arrayOfSchedules.add(newRecord);
-                System.out.println("retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
+                //"retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
             }
             ScheduleAdapter adapter = new ScheduleAdapter(this, arrayOfSchedules);
             mListView.setAdapter(adapter);
 
             conn.close();
-            System.out.println("success.........");
+            //"success.........");
         }
         catch (Exception e){
-            System.out.println(e);
+            //e);
             alertUser("Make sure you have entered a Production Run number like 'yymmdd'!");
         }
         */
@@ -322,7 +319,7 @@ public class ScheduleActivity extends AppCompatActivity{
         Bundle myBundle = new Bundle();
         //myBundle.putString("USERNAME", un);
         //myBundle.putString("PASSWORD", password);
-        System.out.println(",,,,,,,,,,,,,," + inStock);
+        //",,,,,,,,,,,,,," + inStock);
         if(inStock > 0) {
             Intent intent = new Intent(ScheduleActivity.this, LocationActivity.class);
             myBundle.putString("MISSING", woNumber);
@@ -377,7 +374,7 @@ public class ScheduleActivity extends AppCompatActivity{
                     s = rs.getString("Flag_SchedDONE");
                     t = rs.getString("Flag_CoilsDONE");
                     if (s != null) {
-                        System.out.println(rs.getString("Flag_SchedDONE"));
+                        //rs.getString("Flag_SchedDONE"));
                         s = (s.trim()).toUpperCase();
                         if(s.equals("Y")) {
                             continue;
@@ -402,21 +399,21 @@ public class ScheduleActivity extends AppCompatActivity{
                     catch (Exception e){                }
                     ScheduleClass newRecord = new ScheduleClass(rs.getString("SEQ"), rs.getString("COILWO"), rs.getFloat("QTY"), inStock, t);
                     arrayOfSchedules.add(newRecord);
-                    System.out.println("retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
+                    //"retrieved from database" + newRecord.getSequence() + newRecord.getWorkOrder() + newRecord.getQuantity());
                 }
                 conn.close();
-                System.out.println("success.........");
+                //"success.........");
                 //inflateList(arrayOfSchedules);
                 return arrayOfSchedules;
             }
             catch (Exception e){
-                System.out.println(e);
+                //e);
                 alertUser("Make sure you have entered a Production Run number like 'yymmdd'!");
             }
             return null;
         }
         protected void onProgressUpdate(String... progress) {
-            Log.d("ANDRO_ASYNC",progress[0]);
+
 
         }
         @Override

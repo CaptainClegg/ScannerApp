@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
-import android.util.Log;
+
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -91,8 +91,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 COL5 +
                 " = '" + newUser +
                 "' WHERE " + COL1 + " = '" + id + "'";
-        Log.d(TAG, "updateName: query: " + query);
-        Log.d(TAG, "updateName: Setting name to " + newCondition);
         db.execSQL(query);
     }
 }

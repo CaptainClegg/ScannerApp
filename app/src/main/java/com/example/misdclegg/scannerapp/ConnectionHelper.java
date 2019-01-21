@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
+
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -40,9 +40,9 @@ public class ConnectionHelper extends AppCompatActivity {
           catch (Exception e) {
             //Log.e("ERRO3", e.getMessage());
             //try{
-            //System.out.println(i);}
+            ////i);}
             //catch (Exception f){
-                System.out.println("not even i was created");
+                //"not even i was created");
             //}
             conn = null;
         }

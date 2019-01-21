@@ -40,12 +40,12 @@ public class EmptyLocationsActivity extends AppCompatActivity {
             Connection con = new ConnectionHelper().getConnection();
             if(con == null)
                 throw new Exception("the db did not connect");
-            System.out.println(myBundle);
+            //myBundle);
         }
         catch (Exception e){
             un = "";
             password = "";
-            System.out.println("error retrieving bundle");
+            //"error retrieving bundle");
         }
 
         populateList();
@@ -54,7 +54,7 @@ public class EmptyLocationsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 TextView clickedRow = (TextView) view;
-                System.out.println(clickedRow.getText().toString());
+                //clickedRow.getText().toString());
                 returnToActivity(clickedRow.getText().toString());
             }
         });
@@ -76,7 +76,7 @@ public class EmptyLocationsActivity extends AppCompatActivity {
             int i = 0;
             while (rs.next()){
                 arrayOfEmptyLocations[i] = rs.getString("BINname");
-                System.out.println("retrieved from database" + rs.getString("BINname"));
+                //"retrieved from database" + rs.getString("BINname"));
                 arrayOfEmptyLocations = Arrays.copyOf(arrayOfEmptyLocations, arrayOfEmptyLocations.length + 1);
                 i++;
             }
@@ -85,11 +85,11 @@ public class EmptyLocationsActivity extends AppCompatActivity {
             mListView.setAdapter(emptyLocationsAdapter);
 
             conn.close();
-            System.out.println("success.........");
+            //"success.........");
         }
         catch (Exception e){
-            System.out.println(e);
-            System.out.println("there was an error that was caught");
+            //e);
+            //"there was an error that was caught");
         }
     }
 

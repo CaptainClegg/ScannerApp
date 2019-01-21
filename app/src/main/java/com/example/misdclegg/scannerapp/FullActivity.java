@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.LinearLayout;
@@ -47,7 +47,7 @@ public class FullActivity extends AppCompatActivity {
                 TextView woNumber = (TextView) clickedRow.getChildAt(0);
                 TextView location = (TextView) clickedRow.getChildAt(2);
                 TextView quantity = (TextView) clickedRow.getChildAt(4);
-                System.out.println(woNumber.getText().toString());
+                //woNumber.getText().toString());
                 returnToActivity(woNumber.getText().toString(), location.getText().toString(), quantity.getText().toString());
             }
         });
@@ -89,15 +89,15 @@ public class FullActivity extends AppCompatActivity {
                 while (rs.next()){
                     FullClass newRecord = new FullClass(rs.getString("serial"), rs.getString("shelf"), rs.getInt("quantity"));
                     arrayOfEverything.add(newRecord);
-                    System.out.println("retrieved from database" + rs.getString("serial") + newRecord.getShelf() + newRecord.getQuantity());
+                    //"retrieved from database" + rs.getString("serial") + newRecord.getShelf() + newRecord.getQuantity());
                 }
                 conn.close();
-                System.out.println("success.........");
+                //"success.........");
                 //inflateList(arrayOfSchedules);
                 return arrayOfEverything;
             }
             catch (Exception e){
-                System.out.println(e);
+                //e);
             }
             return null;
         }
@@ -124,11 +124,8 @@ public class FullActivity extends AppCompatActivity {
                     + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
         } catch (SQLException se) {
-            Log.e("ERRO1", se.getMessage());
         } catch (ClassNotFoundException e) {
-            Log.e("ERRO2", e.getMessage());
         } catch (Exception e) {
-            Log.e("ERRO3", e.getMessage());
         }
         return conn;
     }

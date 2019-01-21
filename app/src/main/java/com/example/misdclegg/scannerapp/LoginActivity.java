@@ -12,7 +12,7 @@ import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
+
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -156,13 +156,10 @@ public class LoginActivity extends AppCompatActivity {
             conn = DriverManager.getConnection(ConnURL);
 
         } catch (SQLException se) {
-            Log.e("ERRO1", se.getMessage());
             conn = null;
         } catch (ClassNotFoundException e) {
-            Log.e("ERRO2", e.getMessage());
             conn = null;
         } catch (Exception e) {
-            Log.e("ERRO3", e.getMessage());
             conn = null;
         }
         return conn;
