@@ -8,8 +8,10 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
 import android.media.AudioManager;
 import android.media.SoundPool;
+import android.os.Handler;
 import android.os.StrictMode;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -58,6 +60,8 @@ public class CoilingActivity extends AppCompatActivity {
     //private RadioGroup mRadioGroup;
     //private RadioButton mRadioEmpty;
 
+    Handler handler = new Handler();
+
     //private TextView mTopUser;
     //private TextView mTopDb;
 
@@ -70,6 +74,7 @@ public class CoilingActivity extends AppCompatActivity {
 
     private String un;
     private String password;
+    private int i, j, k;
 
     private String mMesage;
 
@@ -119,19 +124,17 @@ public class CoilingActivity extends AppCompatActivity {
         mViewEmpty = (Button) findViewById(R.id.empty_view);
         mViewFullList = (Button) findViewById(R.id.full_view);
 
-        //mRadioGroup = (RadioGroup) findViewById(R.id.radio_group);
-        //mRadioEmpty = (RadioButton) findViewById(R.id.radio_button);
-
-        //mTopUser = (TextView) findViewById(R.id.top_user);
-        //mTopDb = (TextView) findViewById(R.id.top_db);
+        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        mSoundId = mSoundPool.load(this, R.raw.error, 1);
+        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
 
         mDatabaseHelper = new DatabaseHelper(this);
 
         try {
             //mTopUser.setTextColor(Color.BLACK);
             Connection con = CONN();
-            if(con == null)
-                throw new Exception("the db did not connect");
+            //if(con == null)
+                //throw new Exception("the db did not connect");
         }
         catch (Exception e){
 
@@ -144,16 +147,84 @@ public class CoilingActivity extends AppCompatActivity {
             String bundleLocation = myBundle.getString("LOCATION", "");
             String bundleQuantity = myBundle.getString("QUANTITY", "");
             SharedPreferences sharedPref = getSharedPreferences("PREFERENCE", Context.MODE_PRIVATE);
-            if(bundleSerial.length() > 0)
+            if(bundleSerial.length() > 0) {
                 mProductInput.setText(bundleSerial);
+
+                (new Thread(){
+                    @Override
+                    public void run(){
+                        for( i=0; i < 255; i++){
+                            handler.post(new Runnable(){
+                                public void run(){
+                                    mProductInput.getBackground().setColorFilter(Color.argb(100, i, i, 255), PorterDuff.Mode.SRC_OVER);
+                                }
+                            });
+                            // next will pause the thread for some time
+                            try{ sleep(10); }
+                            catch(Exception e){ }
+                        }
+                        handler.post(new Runnable(){
+                            public void run(){
+                                mProductInput.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.DST);
+                            }
+                        });
+                    }
+                }).start();
+            }
             else
                 mProductInput.setText(sharedPref.getString("START_COILING_SERIAL", ""));
-            if(bundleLocation.length() > 0)
+            if(bundleLocation.length() > 0) {
                 mShelfInput.setText(bundleLocation);
+
+                (new Thread(){
+                    @Override
+                    public void run(){
+                        for( j=0; j < 255; j++){
+                            handler.post(new Runnable(){
+                                public void run(){
+                                    mShelfInput.getBackground().setColorFilter(Color.argb(100, j, j, 255), PorterDuff.Mode.SRC_OVER);
+                                }
+                            });
+                            // next will pause the thread for some time
+                            try{ sleep(10); }
+                            catch(Exception e){ }
+                        }
+                        handler.post(new Runnable(){
+                            public void run(){
+                                mShelfInput.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.DST);
+                            }
+                        });
+                    }
+                }).start();
+
+            }
             else
                 mShelfInput.setText(sharedPref.getString("START_COILING_LOCATION", ""));
-            if(bundleQuantity.length() > 0)
+            if(bundleQuantity.length() > 0) {
                 mQuantityInput.setText(bundleQuantity);
+
+                (new Thread(){
+                    @Override
+                    public void run(){
+                        for( k=0; k < 255; k++){
+                            handler.post(new Runnable(){
+                                public void run(){
+                                    mQuantityInput.getBackground().setColorFilter(Color.argb(100, k, k, 255), PorterDuff.Mode.SRC_OVER);
+                                }
+                            });
+                            // next will pause the thread for some time
+                            try{ sleep(10); }
+                            catch(Exception e){ }
+                        }
+                        handler.post(new Runnable(){
+                            public void run(){
+                                mQuantityInput.getBackground().setColorFilter(Color.WHITE, PorterDuff.Mode.DST);
+                            }
+                        });
+                    }
+                }).start();
+
+            }
             else
                 mQuantityInput.setText(sharedPref.getString("START_COILING_QUANTITY", ""));
         }
@@ -163,11 +234,6 @@ public class CoilingActivity extends AppCompatActivity {
 
         //mTopUser.setText(un);
         //mTopDb.setText(db);
-
-
-        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        mSoundId = mSoundPool.load(this, R.raw.error, 1);
-        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
 
         mProductInput.addTextChangedListener(new TextWatcher() {
             @Override
@@ -247,10 +313,6 @@ public class CoilingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CoilingActivity.this, LocationActivity.class);
-                Bundle myBundle = new Bundle();
-                myBundle.putString("USERNAME", un);
-                myBundle.putString("PASSWORD", password);
-                intent.putExtras(myBundle);
                 startActivity(intent);
             }
         });
@@ -259,10 +321,6 @@ public class CoilingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CoilingActivity.this, ScheduleActivity.class);
-                Bundle myBundle = new Bundle();
-                myBundle.putString("USERNAME", un);
-                myBundle.putString("PASSWORD", password);
-                intent.putExtras(myBundle);
                 startActivity(intent);
             }
         });
@@ -271,10 +329,6 @@ public class CoilingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(CoilingActivity.this, EmptyLocationsActivity.class);
-                Bundle myBundle = new Bundle();
-                myBundle.putString("USERNAME", un);
-                myBundle.putString("PASSWORD", password);
-                intent.putExtras(myBundle);
                 startActivity(intent);
             }
         });

@@ -1,24 +1,14 @@
 package com.example.misdclegg.scannerapp;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.os.StrictMode;
-import android.support.v7.app.AppCompatActivity;
-
-
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.SQLException;
 
-public class ConnectionHelper extends AppCompatActivity {
+public class ConnectionHelper{
     //private String password, un;
 
     public ConnectionHelper(){}
 
     public Connection getConnection() {
-
-        String un = "sa";
-        String password = "admin123";
 
         Connection conn;
         String ConnURL;
@@ -31,19 +21,8 @@ public class ConnectionHelper extends AppCompatActivity {
                     + ";user=" + "winding" + ";password=" + "coil123" + ";";
             conn = DriverManager.getConnection(ConnURL);
 
-        } catch (SQLException se) {
-            //Log.e("ERRO1", se.getMessage());
-            conn = null;
-        } //catch (ClassNotFoundException e) {
-           // Log.e("ERRO2", e.getMessage());
-            //conn = null;}
-          catch (Exception e) {
-            //Log.e("ERRO3", e.getMessage());
-            //try{
-            ////i);}
-            //catch (Exception f){
-                //"not even i was created");
-            //}
+        }
+        catch (Exception e) {
             conn = null;
         }
         return conn;

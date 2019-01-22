@@ -91,29 +91,30 @@
                 <EditText
                     android:id="@+id/wrapping_serial"
                     android:layout_width="match_parent"
-                    android:backgroundTint="#000"
                     android:layout_height="45dp"
                     android:inputType="number"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:imeOptions="actionNext"/>
+                    android:imeOptions="actionNext"
+                    android:background="@drawable/edittext_box"
+                    />
 
                 <EditText
                     android:id="@+id/wrapping_shelf"
                     android:layout_width="match_parent"
-                    android:backgroundTint="#000"
                     android:layout_height="45dp"
                     android:inputType="text"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:imeOptions="actionNext"/>
+                    android:imeOptions="actionNext"
+                    android:background="@drawable/edittext_box"/>
 
                 <EditText
                     android:id="@+id/wrapping_quantity"
                     android:layout_width="match_parent"
-                    android:backgroundTint="#000"
                     android:layout_height="45dp"
                     android:inputType="number"
                     android:textAppearance="?android:attr/textAppearanceLarge"
-                    android:imeOptions="actionSend" />
+                    android:imeOptions="actionSend"
+                    android:background="@drawable/edittext_box"/>
             </LinearLayout>
         </LinearLayout>
 
@@ -164,8 +165,8 @@
     <LinearLayout
         android:id="@+id/last_linear"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        android:layout_marginTop="430dp"
+        android:layout_height="80dp"
+        android:layout_marginTop="400dp"
         android:gravity="center"
         >
 
@@ -174,6 +175,7 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".5"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/view_empty_locations"/>
 
         <Button
@@ -181,13 +183,14 @@
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight=".5"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/view_all_items"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="80dp"
         android:gravity="bottom"
         android:layout_below="@id/last_linear"
         >
@@ -197,12 +200,14 @@
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/view_locations"/>
         <Button
             android:id="@+id/bottom_view"
             android:layout_width="0dp"
             android:layout_weight=".5"
             android:layout_height="match_parent"
+            android:textAppearance="?android:attr/textAppearanceLarge"
             android:text="@string/view_schedule" />
 
     </LinearLayout>

@@ -40,11 +40,6 @@ public class LocationActivity extends AppCompatActivity {
 
     private ListView mListView;
 
-    private String un;
-    private String password;
-
-
-
     /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
@@ -125,16 +120,11 @@ public class LocationActivity extends AppCompatActivity {
         super.onStart();
 
         try {
-            Bundle myBundle = getIntent().getExtras();
-            un = myBundle.getString("USERNAME", "");
-            password = myBundle.getString("PASSWORD", "");
             Connection con = new ConnectionHelper().getConnection();
             if(con == null)
                 throw new Exception("the db did not connect");
         }
         catch (Exception e){
-            un = "";
-            password = "";
         }
     }
 
@@ -171,17 +161,18 @@ public class LocationActivity extends AppCompatActivity {
     }
     @Override
     public void onBackPressed(){
-        Bundle myBundle = getIntent().getExtras();
-        if (myBundle.getString("ACTIVITY", "") == "")
-            finish();
-        else {
+
+        try{
+            Bundle myBundle = getIntent().getExtras();
             Intent intent = new Intent(LocationActivity.this, CoilingActivity.class);
-            Bundle myBundle2 = new Bundle();
-            myBundle2.putString("USERNAME", un);
-            myBundle2.putString("PASSWORD", password);
-            myBundle2.putString("SERIAL", mWorkOrderInput.getText().toString());
-            intent.putExtras(myBundle2);
+            //Bundle myBundle2 = new Bundle();
+            //myBundle2.putString("SERIAL", mWorkOrderInput.getText().toString());
+            //intent.putExtras(myBundle2);
             startActivity(intent);
+        }
+
+        catch (Exception e){
+            finish();
         }
     }
 

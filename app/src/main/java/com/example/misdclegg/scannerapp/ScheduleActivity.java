@@ -185,7 +185,7 @@ public class ScheduleActivity extends AppCompatActivity{
         }
     }
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -204,7 +204,7 @@ public class ScheduleActivity extends AppCompatActivity{
         } catch (Exception e) {
         }
         return conn;
-    }
+    }*/
 
     public void checkInput(){
 
@@ -362,7 +362,7 @@ public class ScheduleActivity extends AppCompatActivity{
             try{
                 ArrayList<ScheduleClass> arrayOfSchedules = new ArrayList<ScheduleClass>();
 
-                Connection conn = CONN();
+                Connection conn = new ConnectionHelper().getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ps.setString(1, shift);
                 ps.setString(2, prodRun);
@@ -386,7 +386,7 @@ public class ScheduleActivity extends AppCompatActivity{
                         String query1 = "SELECT *" +
                                 "FROM [WrappingTable]" +
                                 "WHERE [serial] = ?";
-                        Connection conn1 = CONN();
+                        Connection conn1 = new ConnectionHelper().getConnection();
                         PreparedStatement ps1 = conn1.prepareStatement(query1);
                         ps1.setString(1, rs.getString("COILWO"));
                         ResultSet rs1 = ps1.executeQuery();

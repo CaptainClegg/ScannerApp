@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    android:versionCode="000001"
-    android:versionName="01.00.00"
+    android:versionCode="000002"
+    android:versionName="01.02.00"
     package="com.example.misdclegg.scannerapp">
 
     <uses-permission android:name="android.permission.INTERNET" />

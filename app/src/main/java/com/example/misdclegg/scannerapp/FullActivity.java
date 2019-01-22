@@ -82,7 +82,7 @@ public class FullActivity extends AppCompatActivity {
             try{
                 ArrayList<FullClass> arrayOfEverything = new ArrayList<FullClass>();
 
-                Connection conn = CONN();
+                Connection conn = new ConnectionHelper().getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ResultSet rs = ps.executeQuery();
 
@@ -109,7 +109,7 @@ public class FullActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -128,5 +128,5 @@ public class FullActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
         return conn;
-    }
+    }*/
 }
