@@ -1,12 +1,10 @@
 package com.example.misdclegg.scannerapp;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
-import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.media.AudioManager;
@@ -17,32 +15,19 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
-import android.text.Selection;
 import android.text.TextWatcher;
 
 import android.view.KeyEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.ToggleButton;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.List;
 
 public class CoilingActivity extends AppCompatActivity {
 
@@ -72,8 +57,7 @@ public class CoilingActivity extends AppCompatActivity {
     DatabaseHelper mDatabaseHelper;
     private AlertDialog alertDialog;
 
-    private String un;
-    private String password;
+
     private int i, j, k;
 
     private String mMesage;
@@ -83,7 +67,7 @@ public class CoilingActivity extends AppCompatActivity {
         mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
     }
 
-    @SuppressLint("NewApi")
+    /*@SuppressLint("NewApi")
     public Connection CONN() {
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
                 .permitAll().build();
@@ -102,7 +86,7 @@ public class CoilingActivity extends AppCompatActivity {
         } catch (Exception e) {
         }
         return conn;
-    }
+    }*/
 
 
 
@@ -124,22 +108,13 @@ public class CoilingActivity extends AppCompatActivity {
         mViewEmpty = (Button) findViewById(R.id.empty_view);
         mViewFullList = (Button) findViewById(R.id.full_view);
 
-        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        mSoundId = mSoundPool.load(this, R.raw.error, 1);
-        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
-
         mDatabaseHelper = new DatabaseHelper(this);
 
-        try {
-            //mTopUser.setTextColor(Color.BLACK);
-            Connection con = CONN();
-            //if(con == null)
-                //throw new Exception("the db did not connect");
-        }
-        catch (Exception e){
 
-            alertUser("You are not connected to a database");
-        }
+        StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder()
+                .permitAll().build();
+        StrictMode.setThreadPolicy(policy);
+
 
         try{
             Bundle myBundle = getIntent().getExtras();
@@ -356,11 +331,16 @@ public class CoilingActivity extends AppCompatActivity {
         editor.putString("START_COILING_LOCATION", mShelfInput.getText().toString());
         editor.putString("START_COILING_QUANTITY", mQuantityInput.getText().toString());
         editor.apply();
+
+        mSoundPool.release();
     }
 
     @Override
     protected void onResume(){
         super.onResume();
+        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        mSoundId = mSoundPool.load(this, R.raw.error, 1);
+        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
 
     }
 
@@ -402,7 +382,7 @@ public class CoilingActivity extends AppCompatActivity {
         try {
             int oldQuantity = 0;
 
-            Connection conn1 = CONN();
+            Connection conn1 = new ConnectionHelper().getConnection();
             String query1 = "select quantity from WrappingTable where serial = ? and shelf = ?";
             PreparedStatement ps = conn1.prepareStatement(query1);
             ps.setString(1, newSerial);
@@ -417,7 +397,7 @@ public class CoilingActivity extends AppCompatActivity {
                     String query2 = " update WrappingTable" +
                             " set quantity = ?" +
                             " where serial = ? and shelf = ?";
-                    Connection conn = CONN();
+                    Connection conn = new ConnectionHelper().getConnection();
                     PreparedStatement preparedStmt = conn.prepareStatement(query2);
                     preparedStmt.setString (1, updateQuantity);
                     preparedStmt.setString (2, newSerial);
@@ -430,7 +410,7 @@ public class CoilingActivity extends AppCompatActivity {
                         String query3 = " update WrappingTable" +
                                 " set quantity = ?" +
                                 " where serial = ? and shelf = ?";
-                        Connection conn = CONN();
+                        Connection conn = new ConnectionHelper().getConnection();
                         PreparedStatement preparedStmt = conn.prepareStatement(query3);
                         preparedStmt.setString (1, updateQuantity);
                         preparedStmt.setString (2, newSerial);
@@ -440,7 +420,7 @@ public class CoilingActivity extends AppCompatActivity {
                     }
                     else if(Integer.parseInt(updateQuantity) == 0){
                         String query4 = "delete from WrappingTable where serial = ? and shelf = ?";
-                        Connection conn2 = CONN();
+                        Connection conn2 = new ConnectionHelper().getConnection();
                         PreparedStatement preparedStmt = conn2.prepareStatement(query4);
                         preparedStmt.setString (1, newSerial);
                         preparedStmt.setString (2, newShelf);
@@ -452,12 +432,9 @@ public class CoilingActivity extends AppCompatActivity {
                     }
                 }
             }
-            else if (Integer.parseInt(updateQuantity) == 0){
-                ;
-            }
-            else {
+            else if (Integer.parseInt(updateQuantity) >= 0){
                 conn1.close();
-                Connection conn = CONN();
+                Connection conn = new ConnectionHelper().getConnection();
                 String query5 = " insert into WrappingTable (serial, shelf, quantity)" + "values (?, ?, ?)";
                 PreparedStatement preparedStmt = conn.prepareStatement(query5);
                 preparedStmt.setString (1, newSerial);
@@ -468,9 +445,7 @@ public class CoilingActivity extends AppCompatActivity {
             }
         }
         catch (Exception e){
-
-
-            //alertUser("You were not able to add the items because the connection failed!");
+            alertUser("Your entry may not have been submitted.");
             return;
         }
 
@@ -489,7 +464,7 @@ public class CoilingActivity extends AppCompatActivity {
                 String query1 = "SELECT *" +
                         "FROM [WrappingTable]" +
                         "WHERE [serial] = ?";
-                Connection conn1 = CONN();
+                Connection conn1 = new ConnectionHelper().getConnection();
                 PreparedStatement ps1 = conn1.prepareStatement(query1);
                 ps1.setString(1, woNumber);
                 ResultSet rs1 = ps1.executeQuery();
@@ -497,19 +472,18 @@ public class CoilingActivity extends AppCompatActivity {
                 while (rs1.next()) {
                     inStock = inStock + rs1.getInt("quantity");
                 }
-
-
                 conn1.close();
+
                 String query = "SELECT *" +
                         "FROM [schedule]" +
                         "WHERE [COILWO] = ?";
-                Connection conn = CONN();
+                Connection conn = new ConnectionHelper().getConnection();
                 PreparedStatement ps = conn.prepareStatement(query);
                 ps.setString(1, woNumber);
                 ResultSet rs = ps.executeQuery();
                 while (rs.next()){
                     placedFlag = rs.getString("Flag_CoilsDONE");
-                    removedFlag = rs.getString("Flag_SchedDONE");
+                    //removedFlag = rs.getString("Flag_SchedDONE");
 
 
                     orderQuantity = (int)rs.getFloat("QTY");
@@ -519,7 +493,7 @@ public class CoilingActivity extends AppCompatActivity {
 
                 if(orderQuantity == inStock){
                     String query6 = "UPDATE [schedule] SET [Flag_CoilsDONE] = ? WHERE [COILWO] = ?";
-                    Connection conn6 = CONN();
+                    Connection conn6 = new ConnectionHelper().getConnection();
                     PreparedStatement ps6 = conn6.prepareStatement(query6);
                     ps6.setString(1, "Y");
                     ps6.setString(2, woNumber);
@@ -527,21 +501,18 @@ public class CoilingActivity extends AppCompatActivity {
                     conn6.close();
 
                 }
-                else if(placedFlag.equals("Y") && inStock == 0){
-                    String query2 = "UPDATE [testDB].[dbo].[schedule]" +
-                            "SET [Flag_SchedDONE] = ?" +
-                            "WHERE [COILWO] = ?";
-                    Connection conn2 = CONN();
+                if(placedFlag != null && inStock == 0){
+                    String query2 = "UPDATE [schedule] SET [Flag_SchedDONE] = ? WHERE [COILWO] = ?";
+                    Connection conn2 = new ConnectionHelper().getConnection();
                     PreparedStatement ps2 = conn2.prepareStatement(query2);
                     ps2.setString(1, "Y");
                     ps2.setString(2, woNumber);
                     ps2.executeUpdate();
                     conn2.close();
                 }
-                else
-                    ;
             }
             catch (Exception e){
+
             }
         resetFields();
     }

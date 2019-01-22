@@ -88,11 +88,6 @@ public class ScheduleActivity extends AppCompatActivity{
         mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
         //mProgressBar.setVisibility(View.GONE);
 
-        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
-        mSoundId = mSoundPool.load(this, R.raw.error, 1);
-        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
-
-
         context = this;
         //mprogressBar = (ProgressBar) findViewById(R.id.progress_loader);
 
@@ -164,6 +159,8 @@ public class ScheduleActivity extends AppCompatActivity{
         editor.putInt("SHIFT_RADIO", mShiftRadio.getCheckedRadioButtonId());
         editor.putInt("PADPOLE_RADIO", mPadPoleRadio.getCheckedRadioButtonId());
         editor.apply();
+
+        mSoundPool.release();
     }
 
     @Override
@@ -183,7 +180,13 @@ public class ScheduleActivity extends AppCompatActivity{
             //todo enter the current date
             //checkInput();
         }
+
+        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        mSoundId = mSoundPool.load(this, R.raw.error, 1);
+        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
+
     }
+
 
     /*@SuppressLint("NewApi")
     public Connection CONN() {
