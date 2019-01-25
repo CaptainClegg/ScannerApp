@@ -3,11 +3,13 @@ package com.example.misdclegg.scannerapp;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.graphics.Color;
 import android.os.StrictMode;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -39,6 +41,8 @@ public class LocationActivity extends AppCompatActivity {
     private EditText mWorkOrderInput;
 
     private ListView mListView;
+
+    private AlertDialog alertDialog;
 
     /*@SuppressLint("NewApi")
     public Connection CONN() {
@@ -119,12 +123,25 @@ public class LocationActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
 
-        try {
-            Connection con = new ConnectionHelper().getConnection();
-            if(con == null)
-                throw new Exception("the db did not connect");
+        alertDialog = new AlertDialog.Builder(LocationActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+        try{
+            Connection conn = new ConnectionHelper().getConnection();
+            if (conn == null)
+                alertDialog.show();
+            conn.close();
         }
         catch (Exception e){
+            alertDialog.show();
         }
     }
 

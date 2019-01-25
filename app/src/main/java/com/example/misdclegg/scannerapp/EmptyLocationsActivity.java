@@ -1,7 +1,9 @@
 package com.example.misdclegg.scannerapp;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -24,6 +26,8 @@ public class EmptyLocationsActivity extends AppCompatActivity {
 
     private String un;
     private String password;
+
+    private AlertDialog alertDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,33 @@ public class EmptyLocationsActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+
+        alertDialog = new AlertDialog.Builder(EmptyLocationsActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+
+
+        try{
+            Connection conn = new ConnectionHelper().getConnection();
+            if (conn == null)
+                alertDialog.show();
+            conn.close();
+        }
+        catch (Exception e){
+            alertDialog.show();
+        }
+    }
+
     @Override
     protected void onResume(){
         super.onResume();

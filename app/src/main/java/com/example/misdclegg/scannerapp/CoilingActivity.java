@@ -115,7 +115,6 @@ public class CoilingActivity extends AppCompatActivity {
                 .permitAll().build();
         StrictMode.setThreadPolicy(policy);
 
-
         try{
             Bundle myBundle = getIntent().getExtras();
             String bundleSerial = myBundle.getString("SERIAL", "");
@@ -342,6 +341,15 @@ public class CoilingActivity extends AppCompatActivity {
         mSoundId = mSoundPool.load(this, R.raw.error, 1);
         mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
 
+        try{
+            Connection conn = new ConnectionHelper().getConnection();
+            if (conn == null)
+                alertUser("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+            conn.close();
+        }
+        catch (Exception e){
+            alertUser("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+        }
     }
 
     @Override
@@ -568,7 +576,7 @@ public class CoilingActivity extends AppCompatActivity {
           //      new DialogInterface.OnClickListener() {
             //        public void onClick(DialogInterface dialog, int which) {
               //          dialog.dismiss();
-                //        //todo send error report
+                //
                   //  }
                 //});
         //alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "Shelf not Empty",

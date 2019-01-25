@@ -2,10 +2,14 @@ package com.example.misdclegg.scannerapp;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.AsyncTask;
 import android.os.StrictMode;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
@@ -30,6 +34,12 @@ public class FullActivity extends AppCompatActivity {
 
     private ListView mListView;
 
+    private AlertDialog alertDialog;
+
+    private SoundPool mSoundPool;
+    private int mSoundId;
+    private int mSoundConfirm;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,7 +62,21 @@ public class FullActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mSoundPool = new SoundPool(10, AudioManager.STREAM_MUSIC, 1);
+        mSoundId = mSoundPool.load(this, R.raw.error, 1);
+        mSoundConfirm = mSoundPool.load(this, R.raw.confirmation, 1);
         new FileAsync().execute();
+    }
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mSoundPool.release();
     }
 
     private void returnToActivity(String serial, String location, String quantity){
@@ -103,10 +127,29 @@ public class FullActivity extends AppCompatActivity {
         }
         @Override
         protected void onPostExecute(ArrayList arrayList){
-            FullAdapter adapter = new FullAdapter(mContext, arrayList);
-            mListView.setAdapter(adapter);
+            try {
+                FullAdapter adapter = new FullAdapter(mContext, arrayList);
+                mListView.setAdapter(adapter);
+            }
+            catch (Exception e){
+                alertUser("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+            }
             mProgressBar.setVisibility(View.GONE);
         }
+    }
+
+    private void alertUser(String content){
+        alertDialog = new AlertDialog.Builder(FullActivity.this).create();
+        alertDialog.setTitle("Alert");
+        alertDialog.setMessage(content);
+        alertDialog.setButton(AlertDialog.BUTTON_NEUTRAL, "OK",
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+        alertDialog.show();
+        mSoundPool.play(mSoundId, 1, 1, 1, 0, 1);
     }
 
     /*@SuppressLint("NewApi")

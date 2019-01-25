@@ -411,7 +411,7 @@ public class ScheduleActivity extends AppCompatActivity{
             }
             catch (Exception e){
                 //e);
-                alertUser("Make sure you have entered a Production Run number like 'yymmdd'!");
+
             }
             return null;
         }
@@ -421,8 +421,13 @@ public class ScheduleActivity extends AppCompatActivity{
         }
         @Override
         protected void onPostExecute(ArrayList arrayList){
-            ScheduleAdapter adapter = new ScheduleAdapter(context, arrayList);
-            mListView.setAdapter(adapter);
+            try {
+                ScheduleAdapter adapter = new ScheduleAdapter(context, arrayList);
+                mListView.setAdapter(adapter);
+            }
+            catch (Exception e){
+                alertUser("You are not connected to the database. Make sure you are connected to the wifi: ERMCOmfg.");
+            }
             mProgressBar.setVisibility(View.GONE);
         }
     }
